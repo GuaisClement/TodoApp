@@ -38,7 +38,7 @@ function App() {
       </div>
 
       <div>
-        <input type='text' placeholder='Age' value={age} onChange={onTextChange} />
+        <input type='text' placeholder='Age ?' value={age} onChange={onTextChange} />
         <Button label='Valider' onClick={onValidateClick}></Button>
       </div>
     </>
