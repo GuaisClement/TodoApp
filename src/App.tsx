@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Taskbar from './header/Taskbar';
+import TaskList from './TaskList/TaskList';
 
 function App() {
   const [activeView, setActiveView] = useState('home');
@@ -15,7 +16,7 @@ function App() {
       <Taskbar switchView={switchView} />
       <main>
         {activeView === 'home' && <p>Contenu de la vue Accueil</p>}
-        {activeView === 'list' && <p>Contenu de la vue Liste</p>}
+        {activeView === 'list' && <TaskList></TaskList>}
         {activeView === 'check' && <p>Contenu de la vue Check</p>}
         {activeView === 'calendar' && <p>Contenu de la vue Calendrier</p>}
       </main>
