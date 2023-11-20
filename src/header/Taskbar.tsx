@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaHome, FaList, FaCheck, FaCalendar} from 'react-icons/fa';
 import './Taskbar.css';
 
