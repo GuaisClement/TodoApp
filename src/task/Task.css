@@ -1,0 +1,23 @@
+.task{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row-title{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.checkbox{
+    appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #000; /* Couleur de la bordure */
+  outline: none;
+  cursor: pointer;
+}
