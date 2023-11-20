@@ -1,0 +1,25 @@
+.modal {
+    display: block;
+    position: fixed;
+    top: 50%-(height/2);
+    left: 50%-(width/2);
+
+
+    width: 400px;
+    height: auto;
+    background-color: #555;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    
+    z-index: 1;
+    font-size: 20px;
+    cursor: pointer;
+}

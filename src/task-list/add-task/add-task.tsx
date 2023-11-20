@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { TaskModel } from '../../model/task-model';
+import './add-task.css'
 
 interface AddTaskProps {
   onAddTask: (newTask: TaskModel) => void;
@@ -30,28 +31,30 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
   };
 
   return (
-    <div>
-      <h2>Ajouter une tâche</h2>
-      <form>
-        <label>
-          Titre :
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Contenu :
-          <textarea value={content} onChange={(e) => setContent(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Date d'échéance :
-          <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-        </label>
-        <br />
-        <button type="button" onClick={handleAddTask}>
-          Ajouter
-        </button>
-      </form>
+    <div className='modal'>
+      <div className='modal-content'>
+        <h2>Ajouter une tâche</h2>
+        <form>
+          <label>
+            Titre :
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            Contenu :
+            <textarea value={content} onChange={(e) => setContent(e.target.value)} />
+          </label>
+          <br />
+          <label>
+            Date d'échéance :
+            <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
+          </label>
+          <br />
+          <button type="button" onClick={handleAddTask}>
+            Ajouter
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
