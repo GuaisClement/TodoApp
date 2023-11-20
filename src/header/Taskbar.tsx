@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaHome, FaList, FaCheck, FaCalendar } from 'react-icons/fa';
 import './Taskbar.css';
-import Calendar from '../calendar/calendar'; // Assurez-vous d'importer le composant Calendar depuis le bon emplacement
 
-const Taskbar = () => {
-  const [showCalendar, setShowCalendar] = useState(false);
+interface TaskbarProps {
+  switchView: (view: string) => void;
+}
 
-  const toggleCalendar = () => {
-    setShowCalendar(!showCalendar);
-  };
-
+const Taskbar: React.FC<TaskbarProps> = ({ switchView }) => {
   return (
     <div className="taskbar">
-      <div className="taskbar-icon"><FaHome /></div>
-      <div className="taskbar-icon"><FaList /></div>
-      <div className="taskbar-icon"><FaCheck /></div>
-      <div className="taskbar-icon" onClick={toggleCalendar}><FaCalendar /></div>
-
-      {showCalendar && <Calendar />}
+      <div className="taskbar-icon" onClick={() => switchView('home')}><FaHome /></div>
+      <div className="taskbar-icon" onClick={() => switchView('list')}><FaList /></div>
+      <div className="taskbar-icon" onClick={() => switchView('check')}><FaCheck /></div>
+      <div className="taskbar-icon" onClick={() => switchView('calendar')}><FaCalendar /></div>
     </div>
   );
 }

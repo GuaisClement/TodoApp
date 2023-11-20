@@ -1,15 +1,26 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import React, { useState } from 'react';
+import './App.css';
 import Taskbar from './header/Taskbar';
 
 function App() {
+  const [activeView, setActiveView] = useState('home');
+
+  const switchView = (view: React.SetStateAction<string>) => {
+    setActiveView(view);
+  };
+
   return (
     <div className="App">
       <h1>Mon Application</h1>
-      {/* Autres composants de votre application */}
-      <Taskbar />
+      <Taskbar switchView={switchView} />
+      <main>
+        {activeView === 'home' && <p>Contenu de la vue Accueil</p>}
+        {activeView === 'list' && <p>Contenu de la vue Liste</p>}
+        {activeView === 'check' && <p>Contenu de la vue Check</p>}
+        {activeView === 'calendar' && <p>Contenu de la vue Calendrier</p>}
+      </main>
     </div>
   );
 }
 
-export default App
+export default App;
