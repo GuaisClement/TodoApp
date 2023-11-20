@@ -1,4 +1,4 @@
-/* src/components/Taskbar.css */
+
 .taskbar {
     display: flex;
     justify-content: space-around;
@@ -17,11 +17,11 @@
   .taskbar-icon {
     font-size: 24px;
     cursor: pointer;
-    padding: 40px;
-    transition: background-color 0.3s; /* Ajoute une transition pour un effet plus doux */
+    padding: 38px;
+    transition: background-color 0.3s;
   }
   
   .taskbar-icon:hover {
-    background-color: #555; /* Couleur différente au survol */
+    background-color: #555;
   }
   

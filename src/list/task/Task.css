@@ -1,0 +1,11 @@
+.task{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row-title{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
