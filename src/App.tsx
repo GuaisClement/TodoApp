@@ -7,6 +7,7 @@ import AddTask from './list/add-task/add-task';
 
 function App() {
 
+  // Liste Tâche
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -30,6 +31,8 @@ function App() {
       date: new Date(),
     }
   ]);
+
+  // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddTask = (newTask: TaskModel) => {
@@ -37,12 +40,25 @@ function App() {
     setTasks([...tasks, newTask]);
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true)
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  };
+
   return (
     <>
       <div className="App">
+
+        {isModalOpen && (
+          <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
+        )}
+
         <h1>Mon Application</h1>
         <Taskbar />
-        <AddTask onAddTask={handleAddTask} />
+        <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal}/>
         
         {tasks.map((tasks) => (
           <div className="card" key={tasks.id}>

@@ -5,6 +5,7 @@ import { TaskModel } from '../../model/task-model';
 
 interface AddTaskProps {
   onAddTask: (newTask: TaskModel) => void;
+  onCloseModal: () => void;
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
