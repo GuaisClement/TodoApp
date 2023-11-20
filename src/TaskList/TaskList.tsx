@@ -1,27 +1,28 @@
-import Task from "./Task";
+import Task from "../task/Task";
 
-type SingleData = {
+
+type Task = {
   id: number;
   checked: boolean;
   title: string;
   content: string;  
-  Tags: string[];
+  date: Date;
 };
 
-const Data: SingleData[] = [
+const Data: Task[] = [
   {
     id: 0,
     checked: false,
-    title: "title",
+    title: "title &",
     content: "description",
-    Tags:["tag1","tag2"]
+    date: new Date(),
   },
   {
     id: 1,
-    checked: true,
-    title: "title",
-    content: "description",
-    Tags:["tag1","tag2"]
+    checked: false,
+    title: 'Faire les courses',
+    content: 'Acheter du lait, des œufs, et du pain.',
+    date: new Date(),
   },
 ];
 
@@ -30,14 +31,14 @@ function TaskList() {
  
     return (
         <div>
-          {Data.map((value: SingleData) => (
+          {Data.map((value: Task) => (
             <article key={value.id}>
               <Task
                 id={value.id}
                 checked={value.checked}
                 title={value.title}
                 content={value.content}
-                Tags={value.Tags}
+                date={value.date}
               />
             </article>
           ))}
