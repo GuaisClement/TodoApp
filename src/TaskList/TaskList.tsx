@@ -1,5 +1,6 @@
 import Task from "../list/task/Task";
 import {TaskModel} from "../model/task-model";
+import SearchBar from "./filter/SearchBar";
 
 const Data: TaskModel[] = [
   {
@@ -28,8 +29,11 @@ const Data: TaskModel[] = [
 
 function TaskList() {
  
-    return (
+    return (        
         <div>
+          <div>
+            <SearchBar></SearchBar>
+          </div>
           {Data.map((value: TaskModel) => (
             <article key={value.id}>
               <Task
