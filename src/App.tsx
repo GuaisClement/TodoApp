@@ -1,5 +1,6 @@
 import './App.css'
 import Task from './task/Task'
+import Taskbar from './header/Taskbar'
 
 function App() {
   const taskProps = {
@@ -12,6 +13,11 @@ function App() {
 
   return (
     <>
+      <div className="App">
+        <h1>Mon Application</h1>
+        {/* Autres composants de votre application */}
+        <Taskbar />
+      </div>
       <div className="card">
         <Task {...taskProps}></Task>
       </div>
@@ -19,4 +25,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
