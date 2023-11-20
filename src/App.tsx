@@ -1,31 +1,26 @@
-import './App.css'
 import React, { useState } from 'react';
-import Taskbar from './header/Taskbar'
-import TaskList from './TaskList/TaskList';
+import './App.css';
+import Taskbar from './header/Taskbar';
 
 function App() {
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showTaskList, setTaskList] = useState(false);
+  const [activeView, setActiveView] = useState('home');
 
-  
-  const toggleTaskList = () => {    
-    setTaskList(!showTaskList);
-  };
-  const toggleCalendar = () => {    
-    setShowCalendar(!showCalendar);
+  const switchView = (view: React.SetStateAction<string>) => {
+    setActiveView(view);
   };
 
   return (
-    <>
-      <div className="App">
-        <h1>Mon Application</h1>
-        <Taskbar onCalendar={toggleCalendar} onList={toggleTaskList}/>
-        
-        <TaskList/> 
-             
-      </div>
-    </>
-  )
+    <div className="App">
+      <h1>Mon Application</h1>
+      <Taskbar switchView={switchView} />
+      <main>
+        {activeView === 'home' && <p>Contenu de la vue Accueil</p>}
+        {activeView === 'list' && <p>Contenu de la vue Liste</p>}
+        {activeView === 'check' && <p>Contenu de la vue Check</p>}
+        {activeView === 'calendar' && <p>Contenu de la vue Calendrier</p>}
+      </main>
+    </div>
+  );
 }
 
 export default App;
