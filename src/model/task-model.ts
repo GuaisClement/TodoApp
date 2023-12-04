@@ -4,4 +4,5 @@ export type TaskModel = {
     title: string,
     content: string,
     date: Date,
+    tags : string[];
 }
