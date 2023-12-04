@@ -3,6 +3,8 @@ import {TaskModel} from "../model/task-model";
 import { useState } from "react";
 import AddTask from "./add-task/add-task";
 
+import './TaskList.css';
+
 function TaskList() {
 
   //Liste Tâche
@@ -48,18 +50,21 @@ function TaskList() {
   };
  
     return (
-        <div>
-          {isModalOpen && (
+      <div>
+        {isModalOpen && (
+          <>
+            <div className="overlay" onClick={handleCloseModal}></div>
             <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
-          )}
-
-          <button onClick={handleOpenModal}>Ajouter une Tâche</button>
-          {tasks.map((task: TaskModel) => (
-            <article key={task.id}>
-              <Task {...task}/>
-            </article>
-          ))}
-        </div>
+          </>
+        )}
+        
+        <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+        {tasks.map((task: TaskModel) => (
+          <article key={task.id}>
+            <Task {...task}/>
+          </article>
+        ))}
+      </div>
     );
 }
 

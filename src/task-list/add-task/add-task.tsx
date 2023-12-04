@@ -2,14 +2,15 @@
 
 import React, { useState } from 'react';
 import { TaskModel } from '../../model/task-model';
-import './add-task.css'
+import './add-task.css';
+import { IoClose } from 'react-icons/io5';
 
 interface AddTaskProps {
   onAddTask: (newTask: TaskModel) => void;
   onCloseModal: () => void;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
+const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -33,23 +34,23 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
   return (
     <div className='modal'>
       <div className='modal-content'>
+        <div className='close' onClick={onCloseModal}>
+          <IoClose></IoClose>
+        </div>
         <h2>Ajouter une tâche</h2>
         <form>
-          <label>
-            Titre :
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-          </label>
-          <br />
-          <label>
-            Contenu :
-            <textarea value={content} onChange={(e) => setContent(e.target.value)} />
-          </label>
-          <br />
-          <label>
-            Date d'échéance :
+          <div className='form-element'>
+            <label>Titre : </label>
+            <input type="text" value={title} placeholder='Titre' onChange={(e) => setTitle(e.target.value)} />
+          </div>
+          <div className='form-element'>
+            <label>Contenu : </label>
+            <textarea value={content} placeholder='Contenu' onChange={(e) => setContent(e.target.value)} />
+          </div>
+          <div className='form-element'>
+            <label> Date d'échéance : </label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
-          </label>
-          <br />
+          </div>
           <button type="button" onClick={handleAddTask}>
             Ajouter
           </button>
