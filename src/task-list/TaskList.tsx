@@ -36,7 +36,7 @@ function TaskList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddTask = (newTask: TaskModel) => {
-    // MAJ locale
+    // MAJ locale Ajout tache
     setTasks([...tasks, newTask]);
     setIsModalOpen(false);
   }
