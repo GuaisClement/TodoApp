@@ -1,27 +1,27 @@
 
 .taskbar {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    background-color: #333;
-    color: white;
-    height: 100%;
-    width: 100px;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-  }
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  background-color: #333;
+  color: white;
+  height: 100%;
+  width: 100px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
   
-  .taskbar-icon {
-    font-size: 24px;
-    cursor: pointer;
-    padding: 38px;
-    transition: background-color 0.3s;
-  }
-  
-  .taskbar-icon:hover {
-    background-color: #555;
-  }
+.taskbar-icon {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 38px;
+  transition: background-color 0.3s;
+}
+
+.taskbar-icon:hover {
+  background-color: #555;
+}
   

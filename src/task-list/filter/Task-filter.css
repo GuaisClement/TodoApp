@@ -1,0 +1,22 @@
+.filter {
+  display: flex;
+  align-items: center; /* Center vertically */
+  cursor: pointer; /* Apply pointer cursor to the entire filter */
+}
+
+.filter-icon {
+  display: flex; /* Use flexbox to align icons */
+}
+
+.filter-icon > * {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px; /* Adjust padding as needed */
+  transition: background-color 0.3s;
+  height: 32px; /* Set a specific height */
+  width: 32px; /* Set a specific width */
+}
+
+.filter-icon > *:hover {
+  background-color: #555;
+}
