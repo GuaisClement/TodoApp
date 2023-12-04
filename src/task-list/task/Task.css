@@ -1,11 +1,24 @@
+/* TACHE */
+
 .task{
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+
+/* TITRE */
+
 .row-title{
     display: flex;
     flex-direction: row;
     gap: 5px;
+    align-items: center;
+}
+
+.task-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
 }
