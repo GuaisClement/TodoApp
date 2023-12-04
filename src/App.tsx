@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Taskbar from './header/Taskbar';
-import TaskList from './task-list/Task-list';
+import TaskList from './task-list/TaskList';
 
 function App() {
   const [activeView, setActiveView] = useState('home');

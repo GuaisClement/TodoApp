@@ -4,9 +4,9 @@ import { useState } from "react";
 import AddTask from "./add-task/add-task";
 
 import './TaskList.css';
+import TaskFilter from "./filter/Task-filter";
 
 function TaskList() {
-
   //Liste Tâche
   const [tasks, setTasks] = useState([
     {
@@ -15,22 +15,39 @@ function TaskList() {
       title: 'Faire les courses',
       content: 'Acheter du lait, des œufs, et du pain.',
       date: new Date(),
+      tags : ["tag1"],
     },
     {
       id: 2,
       checked: true,
       title: 'Courir',
-      content: 'Acheter du lait, des œufs, et du pain.',
+      content: 'Avec ses pieds',
       date: new Date(),
+      tags : ["tag1","tag2","tag3"],
     },
     {
       id: 3,
       checked: false,
       title: 'Faire la course',
-      content: 'Acheter du lait, des œufs, et du pain.',
+      content: 'Vroum Vroum',
       date: new Date(),
-    }
+      tags : ["tag2"],
+    },
+    {
+      id: 4,
+      checked: true,
+      title: 'Rire',
+      content: 'c\'est important dans la vie',
+      date: new Date(),
+      tags : ["tag3","tag4"],
+    },
   ]);
+
+  //filter
+  const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
+  const handleFilterChange = (filteredData: TaskModel[]) => {
+    setFilteredData(filteredData);
+  };
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,9 +76,16 @@ function TaskList() {
         )}
         
         <button onClick={handleOpenModal}>Ajouter une Tâche</button>
-        {tasks.map((task: TaskModel) => (
-          <article key={task.id}>
-            <Task {...task}/>
+        <TaskFilter data={tasks} onFilterChange={handleFilterChange} />
+        {filteredData.map((value: TaskModel) => (
+          <article key={value.id}>
+            <Task
+              id={value.id}
+              checked={value.checked}
+              title={value.title}
+              content={value.content}
+              date={value.date}
+            />
           </article>
         ))}
       </div>
