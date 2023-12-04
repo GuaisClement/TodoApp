@@ -16,9 +16,7 @@ function App() {
       <Taskbar switchView={switchView} />
       <main>
         {activeView === 'home' && <p>Contenu de la vue Accueil</p>}
-        {activeView === 'list' && (
-          <TaskList></TaskList>
-        )}
+        {activeView === 'list' && <TaskList></TaskList>}
         {activeView === 'check' && <p>Contenu de la vue Check</p>}
         {activeView === 'calendar' && <p>Contenu de la vue Calendrier</p>}
       </main>
