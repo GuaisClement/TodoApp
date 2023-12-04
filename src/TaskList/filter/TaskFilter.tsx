@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { TaskModel } from '../model/task-model';
+import { TaskModel } from '../../model/task-model';
+import { FaFilter } from 'react-icons/fa';
+import { FaSortAmountDownAlt } from "react-icons/fa";
+import './TaskFilter.css'
 
 interface TaskFilterProps {
   data: TaskModel[];
@@ -7,6 +10,7 @@ interface TaskFilterProps {
 }
 
 function TaskFilter({ data, onFilterChange }: TaskFilterProps) {
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [selectedDisplayOption, setSelectedDisplayOption] = useState<
     'checked' | 'unchecked' | 'both'
   >('both');
@@ -78,50 +82,58 @@ function TaskFilter({ data, onFilterChange }: TaskFilterProps) {
   };
 
   return (
-    <div>
-      <label>
-        <input
-          type="radio"
-          value="checked"
-          checked={selectedDisplayOption === 'checked'}
-          onChange={handleDisplayOptionChange}
-        />
-        Checked
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="unchecked"
-          checked={selectedDisplayOption === 'unchecked'}
-          onChange={handleDisplayOptionChange}
-        />
-        Unchecked
-      </label>
-      <label>
-        <input
-          type="radio"
-          value="both"
-          checked={selectedDisplayOption === 'both'}
-          onChange={handleDisplayOptionChange}
-        />
-        Both
-      </label>
+    <div className="filter">
+        <div className="filter-icon">
+          <FaFilter onClick={() => setShowFilter(!showFilter)}/>
+          <FaSortAmountDownAlt />
+        </div>
 
-      <div>
-        <label>Filter by Tags:</label>
-        {Array.from(new Set(data.flatMap((task) => task.tags))).map(
-          (tag) => (
-            <label key={tag}>
-              <input
-                type="checkbox"
-                checked={selectedTags.includes(tag)}
-                onChange={() => handleTagChange(tag)}
-              />
-              {tag}
+        {showFilter === true && (
+            <div>
+            <label>
+                <input
+                type="radio"
+                value="checked"
+                checked={selectedDisplayOption === 'checked'}
+                onChange={handleDisplayOptionChange}
+                />
+                Checked
             </label>
-          )
+            <label>
+                <input
+                type="radio"
+                value="unchecked"
+                checked={selectedDisplayOption === 'unchecked'}
+                onChange={handleDisplayOptionChange}
+                />
+                Unchecked
+            </label>
+            <label>
+                <input
+                type="radio"
+                value="both"
+                checked={selectedDisplayOption === 'both'}
+                onChange={handleDisplayOptionChange}
+                />
+                Both
+            </label>
+
+            <div>
+                {Array.from(new Set(data.flatMap((task) => task.tags))).map(
+                (tag) => (
+                    <label key={tag}>
+                    <input
+                        type="checkbox"
+                        checked={selectedTags.includes(tag)}
+                        onChange={() => handleTagChange(tag)}
+                    />
+                    {tag}
+                    </label>
+                )
+                )}
+            </div>
+            </div>
         )}
-      </div>
     </div>
   );
 }
