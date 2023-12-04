@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Task from "../list/task/Task";
 import {TaskModel} from "../model/task-model";
-import TaskFilter from './filter/TaskFilter'; 
+import TaskFilter from './filter/Task-filter'; 
 
 const Data: TaskModel[] = [
   {

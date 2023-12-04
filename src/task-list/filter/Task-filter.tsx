@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TaskModel } from '../../model/task-model';
 import { FaFilter } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
-import './TaskFilter.css'
+import './Task-filter.css'
 
 interface TaskFilterProps {
   data: TaskModel[];
