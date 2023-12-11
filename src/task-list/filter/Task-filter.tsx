@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { TaskModel } from '../../model/task-model';
 import { FaFilter } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
 import './Task-filter.css'
 
-interface TaskFilterProps {
+type TaskFilterProps = {
   data: TaskModel[];
   onFilterChange: (filteredData: TaskModel[]) => void;
+  getNewFilteredData: () => TaskModel[];
+  setNewFilteredData: (newTask: TaskModel) =>  void;
 }
 
-function TaskFilter({ data, onFilterChange }: TaskFilterProps) {
+const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) => {
+
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [selectedDisplayOption, setSelectedDisplayOption] = useState<
     'checked' | 'unchecked' | 'both'
   >('both');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const handleDisplayOptionChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  useImperativeHandle(ref, () => ({
+    getNewFilteredData,
+    setNewFilteredData,
+  }));
+
+  const handleDisplayOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newDisplayOption = event.target.value as 'checked' | 'unchecked' | 'both';
 
     // Update the selected display option
@@ -81,6 +87,27 @@ function TaskFilter({ data, onFilterChange }: TaskFilterProps) {
     onFilterChange(updatedFilteredData);
   };
 
+  const setNewFilteredData = (newTask: TaskModel): void => {
+    data.push(newTask);
+  }
+
+  const getNewFilteredData = (): TaskModel[] => {
+    return data.filter((task) => {
+      const isTaskChecked = task.checked;
+      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
+
+      switch (selectedDisplayOption) {
+        case 'checked':
+          return isTaskChecked && hasSelectedTags;
+        case 'unchecked':
+          return !isTaskChecked && hasSelectedTags;
+        default:
+          // 'both' option
+          return hasSelectedTags;
+      }
+    });
+  };
+
   return (
     <div className="filter">
         <div className="filter-icon">
@@ -136,6 +163,7 @@ function TaskFilter({ data, onFilterChange }: TaskFilterProps) {
         )}
     </div>
   );
-}
+});
 
-export default TaskFilter;
+export { TaskFilter };  export type { TaskFilterProps };
+
