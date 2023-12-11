@@ -23,8 +23,6 @@ const MyCalendar = () => {
   };
 
   const onClickDay = (value: Date, event: React.SyntheticEvent) => {
-    alert('clicked day : ' + value);
-    console.log('clicked day : ' + value);
     setSelectedTasks(tasks.filter(task => task.date.toDateString() === value.toDateString()));
   };
 
