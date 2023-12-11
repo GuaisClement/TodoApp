@@ -45,6 +45,7 @@ function TaskList() {
 
   //filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
+
   const handleFilterChange = (filteredData: TaskModel[]) => {
     setFilteredData(filteredData);
   };
@@ -56,6 +57,18 @@ function TaskList() {
     // MAJ locale Ajout tache
     setTasks([...tasks, newTask]);
     setIsModalOpen(false);
+  }
+
+  const handleRemoveTask = (id: number) => {
+
+    // Remove on task
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+
+    // Remove on filtered Task
+    const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
+    setFilteredData(updatedFilteredTasks);
+    
   }
   
   const handleOpenModal = () => {
@@ -77,15 +90,9 @@ function TaskList() {
         
         <button onClick={handleOpenModal}>Ajouter une Tâche</button>
         <TaskFilter data={tasks} onFilterChange={handleFilterChange} />
-        {filteredData.map((value: TaskModel) => (
-          <article key={value.id}>
-            <Task
-              id={value.id}
-              checked={value.checked}
-              title={value.title}
-              content={value.content}
-              date={value.date}
-            />
+        {filteredData.map((task: TaskModel) => (
+          <article key={task.id}>
+            <Task {...task} onRemmoveTask={handleRemoveTask}/>
           </article>
         ))}
       </div>

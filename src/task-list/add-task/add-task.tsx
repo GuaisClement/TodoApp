@@ -5,10 +5,10 @@ import { TaskModel } from '../../model/task-model';
 import './add-task.css';
 import { IoClose } from 'react-icons/io5';
 
-interface AddTaskProps {
+type AddTaskProps = {
   onAddTask: (newTask: TaskModel) => void;
   onCloseModal: () => void;
-}
+};
 
 const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
   const [title, setTitle] = useState('');
@@ -22,7 +22,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
       title,
       content,
       date: dueDate ? new Date(dueDate) : new Date(),
-      tags : [""],
+      tags : ["tag2"],
     };
 
     onAddTask(newTask);

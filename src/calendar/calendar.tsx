@@ -28,8 +28,19 @@ const MyCalendar = () => {
 
   const addTask = (newTask: TaskModel) => {
     setTasks([...tasks, newTask]);
+    setSelectedTasks([...selectedTasks, newTask]); // Mettre à jour selectedTasks
     setNewTask('');
     setAddTaskModalOpen(false);
+  };
+
+  const handleRemoveTask = (id: number) => {
+    // Remove on task
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+
+    // Remove on selectedTasks
+    const updatedSelectedTasks = selectedTasks.filter(task => task.id !== id);
+    setSelectedTasks(updatedSelectedTasks);
   };
 
   return (
@@ -48,18 +59,9 @@ const MyCalendar = () => {
         onClickDay={onClickDay}
       />
 
-      {/* Liste des tâches pour la date sélectionnée */}
       {selectedTasks.map((task, index) => (
-        <Task
-          key={index}
-          id={index}
-          checked={false} // À remplacer par la logique appropriée
-          title={task.date.toLocaleDateString('fr-FR')}
-          content={task.content}
-          date={task.date}
-        />
+      <Task {...task} onRemmoveTask={handleRemoveTask}/>
       ))}
-
       {isAddTaskModalOpen && (
         <AddTask onAddTask={addTask} onCloseModal={() => setAddTaskModalOpen(false)} />
       )}
