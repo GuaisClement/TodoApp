@@ -1,10 +1,10 @@
 import Task from "./task/Task";
 import {TaskModel} from "../model/task-model";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AddTask from "./add-task/add-task";
 
 import './TaskList.css';
-import TaskFilter from "./filter/Task-filter";
+import {TaskFilter,TaskFilterProps} from './filter/Task-filter';
 
 function TaskList() {
   //Liste Tâche
@@ -45,9 +45,17 @@ function TaskList() {
 
   //filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
-
-  const handleFilterChange = (filteredData: TaskModel[]) => {
+  const handleFilterChange = (filteredData: TaskModel[]) => {    
     setFilteredData(filteredData);
+  };
+
+  const taskFilterRef = useRef<TaskFilterProps | null>(null);
+
+  const getNewData = (): TaskModel[] => {  
+    return taskFilterRef.current?.getNewFilteredData() || [];
+  };
+  const setNewData = (newTask: TaskModel): TaskModel[] => {  
+    return taskFilterRef.current?.setNewFilteredData(newTask) || [];
   };
 
   // Modal
@@ -56,7 +64,10 @@ function TaskList() {
   const handleAddTask = (newTask: TaskModel) => {
     // MAJ locale Ajout tache
     setTasks([...tasks, newTask]);
-        setIsModalOpen(false);
+    setIsModalOpen(false);
+    setNewData(newTask);
+    setFilteredData(getNewData);
+    handleFilterChange
   }
 
   const handleRemoveTask = (id: number) => {
@@ -93,12 +104,20 @@ function TaskList() {
               Liste de tâches :
           </div>
           <button onClick={handleOpenModal}>Ajouter une Tâche</button>
-        </div>        
-        
-        <TaskFilter data={tasks} onFilterChange={handleFilterChange} />
+        </div>
+
+        <TaskFilter 
+          ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
+          data={tasks} onFilterChange={handleFilterChange}
+          getNewFilteredData={function (): TaskModel[] {
+            throw new Error("Function not implemented.");
+          } } setNewFilteredData={function (): void {
+            throw new Error("Function not implemented.");
+          } }
+        />
 
         <div className="column-task">
-          {tasks.map((task: TaskModel) => (
+          {filteredData.map((task: TaskModel) => (
             <article key={task.id}>
               <Task {...task} onRemmoveTask={handleRemoveTask}/>
             </article>
