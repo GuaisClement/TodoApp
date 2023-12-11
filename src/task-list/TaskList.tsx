@@ -62,13 +62,25 @@ function TaskList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddTask = (newTask: TaskModel) => {
-    // MAJ locale
+    // MAJ locale Ajout tache
     setTasks([...tasks, newTask]);
     setIsModalOpen(false);
     setNewData(newTask);
     setFilteredData(getNewData);
     handleFilterChange
-  };
+  }
+
+  const handleRemoveTask = (id: number) => {
+
+    // Remove on task
+    const updatedTasks = tasks.filter(task => task.id !== id);
+    setTasks(updatedTasks);
+
+    // Remove on filtered Task
+    const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
+    setFilteredData(updatedFilteredTasks);
+    
+  }
   
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -79,15 +91,21 @@ function TaskList() {
   };
  
     return (
-      <div>
+      <div className="task-list">
         {isModalOpen && (
           <>
             <div className="overlay" onClick={handleCloseModal}></div>
             <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
           </>
         )}
-        
-        <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+
+        <div className="row-title">
+          <div className="title">
+              Liste de tâches :
+          </div>
+          <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+        </div>
+
         <TaskFilter 
           ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
           data={tasks} onFilterChange={handleFilterChange}
@@ -96,18 +114,15 @@ function TaskList() {
           } } setNewFilteredData={function (): void {
             throw new Error("Function not implemented.");
           } }
-          />
-        {filteredData.map((value: TaskModel) => (
-          <article key={value.id}>
-            <Task
-              id={value.id}
-              checked={value.checked}
-              title={value.title}
-              content={value.content}
-              date={value.date}
-            />
-          </article>
-        ))}
+        />
+
+        <div className="column-task">
+          {filteredData.map((task: TaskModel) => (
+            <article key={task.id}>
+              <Task {...task} onRemmoveTask={handleRemoveTask}/>
+            </article>
+          ))}
+        </div>
       </div>
     );
 }

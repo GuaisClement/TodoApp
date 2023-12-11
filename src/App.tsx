@@ -12,7 +12,6 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Mon Application</h1>
       <Taskbar switchView={switchView} />
       <main>
         {activeView === 'home' && <p>Contenu de la vue Accueil</p>}
