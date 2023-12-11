@@ -49,6 +49,14 @@ function TaskList() {
     setFilteredData(filteredData);
   };
 
+  const handleOnCheck = (id: number) => {
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) =>
+        task.id === id ? { ...task, checked: !task.checked } : task
+      );
+    });
+  };
+
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
 
   const getNewData = (): TaskModel[] => {  
@@ -96,7 +104,7 @@ function TaskList() {
           } } setNewFilteredData={function (): void {
             throw new Error("Function not implemented.");
           } }
-          />
+        />
         {filteredData.map((value: TaskModel) => (
           <article key={value.id}>
             <Task
@@ -104,7 +112,8 @@ function TaskList() {
               checked={value.checked}
               title={value.title}
               content={value.content}
-              date={value.date}
+              date={value.date} 
+              onCheck={handleOnCheck}
             />
           </article>
         ))}
