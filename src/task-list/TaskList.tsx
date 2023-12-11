@@ -56,7 +56,7 @@ function TaskList() {
   const handleAddTask = (newTask: TaskModel) => {
     // MAJ locale Ajout tache
     setTasks([...tasks, newTask]);
-    setIsModalOpen(false);
+        setIsModalOpen(false);
   }
 
   const handleRemoveTask = (id: number) => {
@@ -80,21 +80,30 @@ function TaskList() {
   };
  
     return (
-      <div>
+      <div className="task-list">
         {isModalOpen && (
           <>
             <div className="overlay" onClick={handleCloseModal}></div>
             <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
           </>
         )}
+
+        <div className="row-title">
+          <div className="title">
+              Liste de tâches :
+          </div>
+          <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+        </div>        
         
-        <button onClick={handleOpenModal}>Ajouter une Tâche</button>
         <TaskFilter data={tasks} onFilterChange={handleFilterChange} />
-        {filteredData.map((task: TaskModel) => (
-          <article key={task.id}>
-            <Task {...task} onRemmoveTask={handleRemoveTask}/>
-          </article>
-        ))}
+
+        <div className="column-task">
+          {tasks.map((task: TaskModel) => (
+            <article key={task.id}>
+              <Task {...task} onRemmoveTask={handleRemoveTask}/>
+            </article>
+          ))}
+        </div>
       </div>
     );
 }
