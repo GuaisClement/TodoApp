@@ -1,7 +1,8 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { TaskModel } from '../../model/task-model';
 import { FaFilter } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
+import { RxCross1 } from "react-icons/rx";
 import './Task-filter.css'
 
 type TaskFilterProps = {
@@ -26,69 +27,30 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
   const handleDisplayOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newDisplayOption = event.target.value as 'checked' | 'unchecked' | 'both';
-
-    // Update the selected display option
     setSelectedDisplayOption(newDisplayOption);
-
-    // Update the filtered data based on the new display option
-    const updatedFilteredData = data.filter((task) => {
-      const isTaskChecked = task.checked;
-
-      // Check if the task has the selected tags (if any)
-      const hasSelectedTags =
-        selectedTags.length === 0 ||
-        selectedTags.some((tag) => task.tags.includes(tag));
-
-      switch (newDisplayOption) {
-        case 'checked':
-          return isTaskChecked && hasSelectedTags;
-        case 'unchecked':
-          return !isTaskChecked && hasSelectedTags;
-        default:
-          // 'both' option
-          return hasSelectedTags;
-      }
-    });
-
-    // Notify the parent component about the updated filtered data
-    onFilterChange(updatedFilteredData);
   };
 
-  const handleTagChange = (tag: string) => {
-    // Toggle the selected tag
-    const newTags = selectedTags.includes(tag)
-      ? selectedTags.filter((t) => t !== tag)
-      : [...selectedTags, tag];
+  const handleTagChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTag = event.target.value;
+    if (!selectedTags.includes(selectedTag)) {
+      setSelectedTags([...selectedTags, selectedTag]);
+    }
+  };
 
-    // Update the selected tags
+  useEffect(() => {
+    // This useEffect will be triggered whenever selectedDisplayOption or selectedTags change
+    updateFilteredData();
+  }, [selectedDisplayOption, selectedTags]);
+
+  const handleRemoveTag = (tag: string) => {
+    const newTags = selectedTags.filter((t) => t !== tag);
     setSelectedTags(newTags);
-
-    // Update the filtered data based on the new selected tags
-    const updatedFilteredData = data.filter((task) => {
-      const isTaskChecked = task.checked;
-
-      // Check if the task has the selected tags (if any)
-      const hasSelectedTags =
-        newTags.length === 0 ||
-        newTags.some((t) => task.tags.includes(t));
-
-      switch (selectedDisplayOption) {
-        case 'checked':
-          return isTaskChecked && hasSelectedTags;
-        case 'unchecked':
-          return !isTaskChecked && hasSelectedTags;
-        default:
-          // 'both' option
-          return hasSelectedTags;
-      }
-    });
-
-    // Notify the parent component about the updated filtered data
-    onFilterChange(updatedFilteredData);
+    updateFilteredData();
   };
 
   const setNewFilteredData = (newTask: TaskModel): void => {
-    data.push(newTask);
+    data.push(newTask);    
+    updateFilteredData();
   }
 
   const getNewFilteredData = (): TaskModel[] => {
@@ -108,6 +70,28 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     });
   };
 
+  const updateFilteredData = () => {
+    const updatedFilteredData = data.filter((task) => {
+      const isTaskChecked = task.checked;
+      const hasSelectedTags =
+        selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
+
+      switch (selectedDisplayOption) {
+        case 'checked':
+          return isTaskChecked && hasSelectedTags;
+        case 'unchecked':
+          return !isTaskChecked && hasSelectedTags;
+        default:
+          // 'both' option
+          return hasSelectedTags;
+      }
+    });
+    onFilterChange(updatedFilteredData);
+  };
+
+  const allTags = Array.from(new Set(data.flatMap((task) => task.tags)));
+  const remainingTags = allTags.filter((tag) => !selectedTags.includes(tag));
+
   return (
     <div className="filter">
         <div className="filter-icon">
@@ -116,6 +100,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
         </div>
 
         {showFilter === true && (
+          <div>
             <div>
             <label>
                 <input
@@ -144,26 +129,36 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
                 />
                 Both
             </label>
+            </div>
+            <div>
+            <label>
+              <select onChange={handleTagChange} value="">
+                <option value="" disabled hidden>
+                  Choose a Tag
+                </option>
+                {remainingTags.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
+            </label>
+            </div>
 
             <div>
-                {Array.from(new Set(data.flatMap((task) => task.tags))).map(
-                (tag) => (
-                    <label key={tag}>
-                    <input
-                        type="checkbox"
-                        checked={selectedTags.includes(tag)}
-                        onChange={() => handleTagChange(tag)}
-                    />
-                    {tag}
-                    </label>
-                )
-                )}
+              {selectedTags.map((tag) => (
+                <span key={tag} >
+                  {tag}
+                  <RxCross1 onClick={() => handleRemoveTag(tag)} />
+                </span>
+              ))}
             </div>
-            </div>
+          </div>
         )}
     </div>
   );
 });
 
-export { TaskFilter };  export type { TaskFilterProps };
+export { TaskFilter };
+export type { TaskFilterProps };
 

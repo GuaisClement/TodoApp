@@ -9,6 +9,7 @@ type Props = {
     content: string,
     date: Date,
     onRemmoveTask: (id: number)=>void;
+    onCheck: (id: number, checked: boolean) => void;
 }
 
 const Task: React.FC<Props> = (task: Props) => {
@@ -18,11 +19,14 @@ const Task: React.FC<Props> = (task: Props) => {
     const handleRemoveTask = () => {
       task.onRemmoveTask(task.id);
     };
+    const onCheck= () => {    
+      task.onCheck(task.id, task.checked );
+    };
 
     return (
         <div className='task'>
           <div className='row-title'>
-              <input type="checkbox" checked={checked} onChange={() => {setChecked(!checked)}} />
+              <input type="checkbox" checked={checked} onChange={() => {setChecked(!checked); onCheck()}} />
               <div  onClick={() => {setShowDetails(!showDetails)}} style={{ cursor: 'pointer' }}>
                   <h3>{task.title}</h3>
               </div>
@@ -39,7 +43,5 @@ const Task: React.FC<Props> = (task: Props) => {
         </div>
       );
 }
-
-
 
 export default Task;

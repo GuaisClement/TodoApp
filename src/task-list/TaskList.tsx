@@ -49,6 +49,14 @@ function TaskList() {
     setFilteredData(filteredData);
   };
 
+  const handleOnCheck = (id: number) => {
+    setTasks((prevTasks) => {
+      return prevTasks.map((task) =>
+        task.id === id ? { ...task, checked: !task.checked } : task
+      );
+    });
+  };
+
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
 
   const getNewData = (): TaskModel[] => {  
@@ -119,7 +127,7 @@ function TaskList() {
         <div className="column-task">
           {filteredData.map((task: TaskModel) => (
             <article key={task.id}>
-              <Task {...task} onRemmoveTask={handleRemoveTask}/>
+              <Task {...task} onRemmoveTask={handleRemoveTask} onCheck={handleOnCheck}/>
             </article>
           ))}
         </div>
