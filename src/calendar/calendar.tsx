@@ -28,7 +28,7 @@ const MyCalendar = () => {
 
   const addTask = (newTask: TaskModel) => {
     setTasks([...tasks, newTask]);
-    setSelectedTasks([...selectedTasks, newTask]); // Mettre à jour selectedTasks
+    setSelectedTasks([...selectedTasks, newTask]);
     setNewTask('');
     setAddTaskModalOpen(false);
   };
@@ -37,7 +37,6 @@ const MyCalendar = () => {
     // Remove on task
     const updatedTasks = tasks.filter(task => task.id !== id);
     setTasks(updatedTasks);
-
     // Remove on selectedTasks
     const updatedSelectedTasks = selectedTasks.filter(task => task.id !== id);
     setSelectedTasks(updatedSelectedTasks);
@@ -58,7 +57,6 @@ const MyCalendar = () => {
         className="custom-calendar"
         onClickDay={onClickDay}
       />
-
       {selectedTasks.map((task, index) => (
       <Task {...task} onRemmoveTask={handleRemoveTask}/>
       ))}
@@ -68,5 +66,4 @@ const MyCalendar = () => {
     </div>
   );
 };
-
 export default MyCalendar;
