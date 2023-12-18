@@ -128,7 +128,7 @@ function Home() {
 
       <div className="row-title-task-list">
         <div className="title-task-list">
-            Aujourd'hui :
+            Aujourd'hui
         </div>
         <button onClick={handleOpenModal}>Ajouter une Tâche</button>
       </div>

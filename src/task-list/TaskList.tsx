@@ -148,7 +148,7 @@ function TaskList() {
 
         <div className="row-title-task-list">
           <div className="title-task-list">
-              Liste de tâches :
+              Liste de tâches
           </div>
           <button onClick={handleOpenModal}>Ajouter une Tâche</button>
         </div>

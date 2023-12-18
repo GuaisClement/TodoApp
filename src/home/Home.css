@@ -13,6 +13,10 @@
     justify-content: center;
     margin-top: 20px;
     margin-bottom: 20px;
+
+    @media (max-width: 480px) {
+        flex-direction: column;
+    }
 }
 
 .title-task-list {
@@ -25,6 +29,12 @@
     position: absolute;
     right: 25px;
     display: inline-block;
+
+    @media (max-width: 480px) {
+        position: relative;
+        right: 0;
+        margin-top: 30px;
+    }
 }
 
 /* TASKS */
