@@ -111,7 +111,7 @@ function TaskList() {
           <div className="title">
               Liste de tâches :
           </div>
-          <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+          <button className="add-task-button" onClick={handleOpenModal}>Ajouter une Tâche</button>
         </div>
 
         <TaskFilter 

@@ -57,9 +57,8 @@ select {
   cursor: pointer;
 }
 
-/* Style the dropdown arrow */
 select::after {
-  content: '\25BC'; /* Unicode character for a downward-pointing triangle */
+  content: '\25BC'; 
   position: absolute;
   top: 50%;
   right: 10px;
@@ -67,19 +66,17 @@ select::after {
   pointer-events: none;
 }
 
-/* Style the options within the dropdown */
 select option {
   background-color:#333;
   color: #333;
 }
 
-/* Style the select when it's focused */
+
 select:focus {
-  border-color: #007bff; /* Change to your preferred focus color */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Change to your preferred box shadow */
+  border-color: #007bff; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
 }
 
-/* Style the selected tags section */
 div p {
   font-weight: bold;
   margin-bottom: 5px;
@@ -88,8 +85,8 @@ div p {
 .tag-button {
   display: inline-flex;
   align-items: center;
-  margin-right: 8px; /* Adjust as needed */
-  padding: 4px 8px; /* Adjust as needed */
+  margin-right: 8px; 
+  padding: 4px 8px; 
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;

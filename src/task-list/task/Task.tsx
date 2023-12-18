@@ -8,6 +8,7 @@ type Props = {
     title: string,
     content: string,
     date: Date,
+    tags : string[],
     onRemmoveTask: (id: number)=>void;
     onCheck: (id: number, checked: boolean) => void;
 }
@@ -29,10 +30,20 @@ const Task: React.FC<Props> = (task: Props) => {
               <input type="checkbox" checked={checked} onChange={() => {setChecked(!checked); onCheck()}} />
               <div  onClick={() => {setShowDetails(!showDetails)}} style={{ cursor: 'pointer' }}>
                   <h3>{task.title}</h3>
+              </div>              
+              
+              <div className="task-tags" >
+                {task.tags.map((tag) => (
+                  <button disabled={true} key={tag} className="tag-button" >
+                    {tag}
+                  </button>
+                ))}
               </div>
+
               <div className="task-icon" onClick={handleRemoveTask}>
                 <ImBin2></ImBin2>
               </div>
+
           </div>
           {showDetails && (
             <div>
