@@ -14,7 +14,7 @@ function TaskList() {
       checked: false,
       title: 'Faire les courses',
       content: 'Acheter du lait, des œufs, et du pain.',
-      date: new Date(),
+      date : new Date(2023, 11, 31, 12, 0, 0, 0),
       tags : ["tag1"],
     },
     {
@@ -22,7 +22,7 @@ function TaskList() {
       checked: true,
       title: 'Courir',
       content: 'Avec ses pieds',
-      date: new Date(),
+      date: new Date(2022, 11, 31, 12, 0, 0, 0),
       tags : ["tag1","tag2","tag3"],
     },
     {
@@ -30,7 +30,7 @@ function TaskList() {
       checked: false,
       title: 'Faire la course',
       content: 'Vroum Vroum',
-      date: new Date(),
+      date: new Date(2024, 11, 31, 12, 0, 0, 0),
       tags : ["tag2"],
     },
     {

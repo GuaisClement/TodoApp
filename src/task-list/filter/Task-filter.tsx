@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { TaskModel } from '../../model/task-model';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaSortAmountUpAlt } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
 import { RxCross1 } from "react-icons/rx";
 import './Task-filter.css'
@@ -15,15 +15,23 @@ type TaskFilterProps = {
 const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) => {
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
-  const [selectedDisplayOption, setSelectedDisplayOption] = useState<
-    'checked' | 'unchecked' | 'both'
-  >('both');
+  const [selectedDisplayOption, setSelectedDisplayOption] = useState<'checked' | 'unchecked' | 'both'>('both');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  
 
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
     setNewFilteredData,
+    toggleSortOrder,
   }));
+
+  const toggleSortOrder = () => {
+    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+    setSortOrder(newSortOrder);
+    updateFilteredData(); 
+  };
 
   const handleDisplayOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newDisplayOption = event.target.value as 'checked' | 'unchecked' | 'both';
@@ -57,6 +65,14 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     return data.filter((task) => {
       const isTaskChecked = task.checked;
       const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
+      const isTaskToday = isDateToday(task.date);
+
+      if (isTaskToday && !task.tags.includes('today')) {
+        task.tags.push('today');
+      }else if (!isTaskToday && task.tags.includes('today')) {
+        const index = task.tags.indexOf('today');
+        task.tags.splice(index, 1);
+      }
 
       switch (selectedDisplayOption) {
         case 'checked':
@@ -71,22 +87,21 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   };
 
   const updateFilteredData = () => {
-    const updatedFilteredData = data.filter((task) => {
-      const isTaskChecked = task.checked;
-      const hasSelectedTags =
-        selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
+    const updatedFilteredData = getNewFilteredData();
+    const sortedData = sortOrder === 'asc'
+      ? [...updatedFilteredData].sort((a, b) => a.date.getTime() - b.date.getTime())
+      : [...updatedFilteredData].sort((a, b) => b.date.getTime() - a.date.getTime());
 
-      switch (selectedDisplayOption) {
-        case 'checked':
-          return isTaskChecked && hasSelectedTags;
-        case 'unchecked':
-          return !isTaskChecked && hasSelectedTags;
-        default:
-          // 'both' option
-          return hasSelectedTags;
-      }
-    });
-    onFilterChange(updatedFilteredData);
+    onFilterChange(sortedData);
+  };
+
+  const isDateToday = (date: Date): boolean => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   };
 
   const allTags = Array.from(new Set(data.flatMap((task) => task.tags)));
@@ -96,7 +111,11 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     <div className="filter">
         <div className="filter-icon">
           <FaFilter onClick={() => setShowFilter(!showFilter)}/>
-          <FaSortAmountDownAlt />
+          {sortOrder === 'asc' ? (
+            <FaSortAmountUpAlt onClick={toggleSortOrder} />
+          ) : (            
+            <FaSortAmountDownAlt onClick={toggleSortOrder} />
+          )}
         </div>
 
         {showFilter === true && (
