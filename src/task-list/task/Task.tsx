@@ -43,6 +43,4 @@ const Task: React.FC<Props> = (props: Props) => {
       );
 }
 
-
-
 export default Task;

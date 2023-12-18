@@ -1,11 +1,12 @@
+/* Additional styles for the filter container */
 .filter {
   display: flex;
-  align-items: center; /* Center vertically */
-  cursor: pointer; /* Apply pointer cursor to the entire filter */
-}
-
-.filter-icon {
-  display: flex; /* Use flexbox to align icons */
+  flex-direction: column; /* Display children in a column layout */
+  align-items: flex-start; /* Align children to the start (left) */
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .filter-icon > * {
@@ -19,4 +20,51 @@
 
 .filter-icon > *:hover {
   background-color: #555;
+}
+
+/* Style the radio buttons and select dropdown */
+label {
+  display: block;
+  margin-bottom: 10px; /* Add some space between radio buttons and select */
+}
+
+input[type="radio"],
+select {
+  margin-right: 10px; /* Add some space between options */
+}
+
+/* Style the selected tags section */
+div p {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Style the 'X' icon for removing tags */
+span {
+  display: inline-block;
+  transition: background-color 0.3s;
+  margin-right: 5px;
+}
+
+span > *:hover {
+  background-color: #555;
+  cursor: pointer;
+}
+
+/* Add styles for the 'X' icon in case you have one (e.g., RxCross1) */
+.RxCross1 {
+  cursor: pointer;
+}
+
+
+/* Style for the "Select Tag" and "Selected Tags" sections side by side */
+.filter > div > div {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+/* Adjust spacing as needed */
+.filter > div > div > label,
+.filter > div > div > div {
+  margin-right: 10px;
 }
