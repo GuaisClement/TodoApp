@@ -1,34 +1,33 @@
 import React, { useState } from 'react'
 import './Task.css'
 import { ImBin2 } from "react-icons/im";
+import { TaskModel } from '../../model/task-model';
 
 type Props = {
-    id: number,
-    checked: boolean,
-    title: string,
-    content: string,
-    date: Date,
-    onRemmoveTask: (id: number)=>void;
-    onCheck: (id: number, checked: boolean) => void;
+    task: TaskModel,
+    onRemmoveTask: (id: string)=>void;
+    onChecked: (task: TaskModel)=>void;
 }
 
-const Task: React.FC<Props> = (task: Props) => {
+const Task: React.FC<Props> = (props: Props) => {
     const [showDetails, setShowDetails] = useState(false);
-    const [checked,setChecked] = useState<boolean>(task.checked);
+    const [checked,setChecked] = useState<boolean>(props.task.checked);
 
     const handleRemoveTask = () => {
-      task.onRemmoveTask(task.id);
+      props.onRemmoveTask(props.task.id);
     };
-    const onCheck= () => {    
-      task.onCheck(task.id, task.checked );
-    };
+
+    const handleChecked = () => {
+      setChecked(!checked);
+      props.onChecked(props.task);
+    }
 
     return (
         <div className='task'>
-          <div className='row-title'>
-              <input type="checkbox" checked={checked} onChange={() => {setChecked(!checked); onCheck()}} />
+          <div className='row-title-task'>
+              <input type="checkbox" checked={checked} onChange={() => {handleChecked}} />
               <div  onClick={() => {setShowDetails(!showDetails)}} style={{ cursor: 'pointer' }}>
-                  <h3>{task.title}</h3>
+                  <h3>{props.task.title}</h3>
               </div>
               <div className="task-icon" onClick={handleRemoveTask}>
                 <ImBin2></ImBin2>
@@ -36,8 +35,8 @@ const Task: React.FC<Props> = (task: Props) => {
           </div>
           {showDetails && (
             <div>
-              <p>{task.content}</p>
-              <p>Date: {task.date.toDateString()}</p>
+              <p>{props.task.content}</p>
+              <p>Date: {props.task.date.toDateString()}</p>
             </div>
           )}
         </div>

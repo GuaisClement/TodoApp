@@ -9,7 +9,7 @@
 
 /* TITRE */
 
-.row-title{
+.row-title-task{
     display: flex;
     flex-direction: row;
     gap: 5px;

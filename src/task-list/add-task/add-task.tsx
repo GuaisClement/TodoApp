@@ -52,7 +52,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
             <label> Date d'échéance : </label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
-          <button type="button" onClick={handleAddTask}>
+          <button type="button" onClick={handleAddTask} disabled={!title.trim()}>
             Ajouter
           </button>
         </form>

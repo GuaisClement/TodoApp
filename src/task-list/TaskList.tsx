@@ -1,60 +1,29 @@
 import Task from "./task/Task";
 import {TaskModel} from "../model/task-model";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddTask from "./add-task/add-task";
 
 import './TaskList.css';
 import {TaskFilter,TaskFilterProps} from './filter/Task-filter';
+import tasksFirebase from "../firebase/hooks/hooksFirebase";
+import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
 
 function TaskList() {
   //Liste Tâche
-  const [tasks, setTasks] = useState([
-    {
-      id: 1,
-      checked: false,
-      title: 'Faire les courses',
-      content: 'Acheter du lait, des œufs, et du pain.',
-      date : new Date(2023, 11, 31, 12, 0, 0, 0),
-      tags : ["tag1"],
-    },
-    {
-      id: 2,
-      checked: true,
-      title: 'Courir',
-      content: 'Avec ses pieds',
-      date: new Date(2022, 11, 31, 12, 0, 0, 0),
-      tags : ["tag1","tag2","tag3"],
-    },
-    {
-      id: 3,
-      checked: false,
-      title: 'Faire la course',
-      content: 'Vroum Vroum',
-      date: new Date(2024, 11, 31, 12, 0, 0, 0),
-      tags : ["tag2"],
-    },
-    {
-      id: 4,
-      checked: true,
-      title: 'Rire',
-      content: 'c\'est important dans la vie',
-      date: new Date(),
-      tags : ["tag3","tag4"],
-    },
-  ]);
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  const data = tasksFirebase();
 
   //filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
+
+  useEffect(() => {
+    setTasks(data);
+    setFilteredData(data);
+  }, [data]);
+
   const handleFilterChange = (filteredData: TaskModel[]) => {    
     setFilteredData(filteredData);
-  };
-
-  const handleOnCheck = (id: number) => {
-    setTasks((prevTasks) => {
-      return prevTasks.map((task) =>
-        task.id === id ? { ...task, checked: !task.checked } : task
-      );
-    });
   };
 
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
@@ -69,24 +38,45 @@ function TaskList() {
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAddTask = (newTask: TaskModel) => {
-    // MAJ locale Ajout tache
-    setTasks([...tasks, newTask]);
-    setIsModalOpen(false);
-    setNewData(newTask);
-    setFilteredData(getNewData);
-    handleFilterChange
+  const handleAddTask = async (newTask: TaskModel) => {
+
+    try {
+      const taskId = await addTaskToFirestore(newTask);
+      newTask.id = taskId;
+      setTasks([...tasks, newTask]);
+      setIsModalOpen(false);
+      setNewData(newTask);
+      setFilteredData(getNewData);
+      handleFilterChange;
+    } catch (error) {
+      // Gérez les erreurs
+    }
   }
 
-  const handleRemoveTask = (id: number) => {
+  const handleRemoveTask = async (id: string) => {
 
-    // Remove on task
-    const updatedTasks = tasks.filter(task => task.id !== id);
-    setTasks(updatedTasks);
+    try {
+      const taskId = await removeTaskFromFirestore(id);
 
-    // Remove on filtered Task
-    const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
-    setFilteredData(updatedFilteredTasks);
+      // Remove on task
+      const updatedTasks = tasks.filter(task => task.id !== id);
+      setTasks(updatedTasks);
+
+      // Remove on filtered Task
+      const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
+      setFilteredData(updatedFilteredTasks);
+    } catch (error) {
+      // Gérez les erreurs
+    }
+    
+  }
+
+  const handleCheckedTask = async (task: TaskModel) =>{
+    try {
+      const taskId = await updateTaskInFirestore(task.id, task);
+    } catch (error) {
+      // Gérez les erreurs
+    }
     
   }
   
@@ -107,8 +97,8 @@ function TaskList() {
           </>
         )}
 
-        <div className="row-title">
-          <div className="title">
+        <div className="row-title-task-list">
+          <div className="title-task-list">
               Liste de tâches :
           </div>
           <button onClick={handleOpenModal}>Ajouter une Tâche</button>
@@ -126,9 +116,11 @@ function TaskList() {
 
         <div className="column-task">
           {filteredData.map((task: TaskModel) => (
-            <article key={task.id}>
-              <Task {...task} onRemmoveTask={handleRemoveTask} onCheck={handleOnCheck}/>
-            </article>
+            <div className="separator">
+              <article key={task.id}>
+                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask}/>
+              </article>
+            </div>
           ))}
         </div>
       </div>
