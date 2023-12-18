@@ -11,21 +11,21 @@ type Props = {
 
 const Task: React.FC<Props> = (props: Props) => {
     const [showDetails, setShowDetails] = useState(false);
-    const [checked,setChecked] = useState<boolean>(props.task.checked);
 
     const handleRemoveTask = () => {
       props.onRemmoveTask(props.task.id);
     };
 
     const handleChecked = () => {
-      setChecked(!checked);
+
+      props.task.checked = !props.task.checked;
       props.onChecked(props.task);
     }
 
     return (
         <div className='task'>
           <div className='row-title-task'>
-              <input type="checkbox" checked={checked} onChange={() => {handleChecked}} />
+              <input type="checkbox" checked={props.task.checked} onChange={handleChecked} />
               <div  onClick={() => {setShowDetails(!showDetails)}} style={{ cursor: 'pointer' }}>
                   <h3>{props.task.title}</h3>
               </div>
@@ -36,7 +36,11 @@ const Task: React.FC<Props> = (props: Props) => {
           {showDetails && (
             <div>
               <p>{props.task.content}</p>
-              <p>Date: {props.task.date.toDateString()}</p>
+              <p>Date: {new Intl.DateTimeFormat('fr-FR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }).format(props.task.date)}</p>
             </div>
           )}
         </div>

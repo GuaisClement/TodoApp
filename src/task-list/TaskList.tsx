@@ -41,23 +41,47 @@ function TaskList() {
   const handleAddTask = async (newTask: TaskModel) => {
 
     try {
-      const taskId = await addTaskToFirestore(newTask);
-      newTask.id = taskId;
+
+      //MAJ Locale
       setTasks([...tasks, newTask]);
       setIsModalOpen(false);
       setNewData(newTask);
       setFilteredData(getNewData);
       handleFilterChange;
+
+      const taskId = await addTaskToFirestore(newTask);
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === newTask.id) {
+            return { ...task, id: taskId };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
     } catch (error) {
-      // Gérez les erreurs
+
+      // Remove on task
+      const updatedTasks = tasks.filter(task => task.id !== '');
+      setTasks(updatedTasks);
+
+      // Remove on filtered Task
+      const updatedFilteredTasks = filteredData.filter(task => task.id !== '');
+      setFilteredData(updatedFilteredTasks);
     }
+
+    
   }
 
   const handleRemoveTask = async (id: string) => {
 
-    try {
-      const taskId = await removeTaskFromFirestore(id);
+    // Sauvegardez la tâche à supprimer
+    const taskToRemove = tasks.find(task => task.id === id);
 
+    try {
+      
       // Remove on task
       const updatedTasks = tasks.filter(task => task.id !== id);
       setTasks(updatedTasks);
@@ -65,17 +89,42 @@ function TaskList() {
       // Remove on filtered Task
       const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
       setFilteredData(updatedFilteredTasks);
+
+      await removeTaskFromFirestore(id);
     } catch (error) {
-      // Gérez les erreurs
+
+      if (taskToRemove) {
+        setTasks(prevTasks => [...prevTasks, taskToRemove]);
+      }
     }
     
   }
 
   const handleCheckedTask = async (task: TaskModel) =>{
     try {
-      const taskId = await updateTaskInFirestore(task.id, task);
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === task.id) {
+            return { ...task, checked: task.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
+      await updateTaskInFirestore(task.id, task);
     } catch (error) {
-      // Gérez les erreurs
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === task.id) {
+            return { ...task, checked: !task.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
     }
     
   }
