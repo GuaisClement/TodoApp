@@ -2,6 +2,9 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import { TaskModel } from '../../model/task-model';
 import { FaFilter, FaSortAmountUpAlt } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
+import { MdOutlineCheckBox } from "react-icons/md";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md"
+import { MdOutlineLibraryAddCheck } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import './Task-filter.css'
 
@@ -114,35 +117,42 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
         {showFilter === true && (
           <div>
-            <div>
+            <div className="checkbox-container">
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="checked"
                 checked={selectedDisplayOption === 'checked'}
                 onChange={handleDisplayOptionChange}
-                />
-                Checked
+                className="hidden-checkbox"
+              />
+              <MdOutlineCheckBox className="check-icon" />
             </label>
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="unchecked"
                 checked={selectedDisplayOption === 'unchecked'}
                 onChange={handleDisplayOptionChange}
-                />
-                Unchecked
+                className="hidden-checkbox"
+              />
+              <MdOutlineCheckBoxOutlineBlank className="check-icon" />
             </label>
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="both"
                 checked={selectedDisplayOption === 'both'}
                 onChange={handleDisplayOptionChange}
-                />
-                Both
+                className="hidden-checkbox"
+              />
+              <MdOutlineLibraryAddCheck className="check-icon" />
             </label>
             </div>
+
             <div>
             <label>
               <select onChange={handleTagChange} value="">
@@ -160,10 +170,10 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
             <div>
               {selectedTags.map((tag) => (
-                <span key={tag} >
+                <button key={tag} className="tag-button" onClick={() => handleRemoveTag(tag)}>
                   {tag}
-                  <RxCross1 onClick={() => handleRemoveTag(tag)} />
-                </span>
+                  <RxCross1 className="cross-icon" />
+                </button>
               ))}
             </div>
           </div>
