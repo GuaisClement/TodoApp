@@ -1,5 +1,5 @@
 export type TaskModel = {
-    id: number,
+    id: string,
     checked: boolean
     title: string,
     content: string,
