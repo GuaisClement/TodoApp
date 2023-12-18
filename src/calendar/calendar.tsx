@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
 import './calendar.css';
 import Task from '../task-list/task/Task' // Assurez-vous que le chemin est correct
 import AddTask from '../task-list/add-task/add-task'; // Assurez-vous que le chemin est correct
