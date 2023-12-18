@@ -17,7 +17,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
 
   const handleAddTask = () => {
     const newTask = {
-      id: Math.random(),
+      id: '',
       checked: false,
       title,
       content,
