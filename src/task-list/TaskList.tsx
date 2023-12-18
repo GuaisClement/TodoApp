@@ -115,10 +115,10 @@ function TaskList() {
         />
 
         <div className="column-task">
-          {filteredData.map((task: TaskModel) => (
+          {filteredData.map((taskModel: TaskModel) => (
             <div className="separator">
-              <article key={task.id}>
-                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask}/>
+              <article key={taskModel.id}>
+                <Task task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask}/>
               </article>
             </div>
           ))}

@@ -33,10 +33,7 @@ function tasksFirebase() {
           };
           return transformedTask;
         });
-        console.log('newData:', newData); 
-
-
-
+ 
         setData(newData);
       } catch (error) {
         console.error('Error fetching data from Firebase:', error);

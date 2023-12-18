@@ -27,7 +27,7 @@ const Task: React.FC<Props> = (props: Props) => {
           <div className='row-title-task'>
               <input type="checkbox" checked={checked} onChange={() => {handleChecked}} />
               <div  onClick={() => {setShowDetails(!showDetails)}} style={{ cursor: 'pointer' }}>
-                  <h3>{props.task.title}</h3>
+                  <span style={{ fontSize: 24 }}>{props.task.title}</span>
               </div>
               <div className="task-icon" onClick={handleRemoveTask}>
                 <ImBin2></ImBin2>
@@ -35,8 +35,9 @@ const Task: React.FC<Props> = (props: Props) => {
           </div>
           {showDetails && (
             <div>
-              <p>{props.task.content}</p>
-              <p>Date: {props.task.date.toDateString()}</p>
+              <span>{props.task.content}</span>
+              <br />
+              <span>Date: {props.task.date.toDateString()}</span>
             </div>
           )}
         </div>
