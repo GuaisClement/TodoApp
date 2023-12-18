@@ -17,9 +17,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [selectedDisplayOption, setSelectedDisplayOption] = useState<'checked' | 'unchecked' | 'both'>('both');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-
-  
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');  
 
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
@@ -28,9 +26,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   }));
 
   const toggleSortOrder = () => {
-    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-    setSortOrder(newSortOrder);
-    updateFilteredData(); 
+    setSortOrder(prevSortOrder => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
   };
 
   const handleDisplayOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +42,8 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   };
 
   useEffect(() => {
-    // This useEffect will be triggered whenever selectedDisplayOption or selectedTags change
     updateFilteredData();
-  }, [selectedDisplayOption, selectedTags]);
+  }, [selectedDisplayOption, selectedTags, sortOrder]);
 
   const handleRemoveTag = (tag: string) => {
     const newTags = selectedTags.filter((t) => t !== tag);
@@ -91,7 +86,6 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     const sortedData = sortOrder === 'asc'
       ? [...updatedFilteredData].sort((a, b) => a.date.getTime() - b.date.getTime())
       : [...updatedFilteredData].sort((a, b) => b.date.getTime() - a.date.getTime());
-
     onFilterChange(sortedData);
   };
 

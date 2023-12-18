@@ -117,11 +117,8 @@ function TaskList() {
         <TaskFilter 
           ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
           data={tasks} onFilterChange={handleFilterChange}
-          getNewFilteredData={function (): TaskModel[] {
-            throw new Error("Function not implemented.");
-          } } setNewFilteredData={function (): void {
-            throw new Error("Function not implemented.");
-          } }
+          getNewFilteredData={function (): TaskModel[] {throw new Error("Function not implemented.");} }
+          setNewFilteredData={function (): void {} }
         />
 
         <div className="column-task">
