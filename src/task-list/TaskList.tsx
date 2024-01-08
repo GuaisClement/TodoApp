@@ -10,7 +10,7 @@ import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } fr
 
 function TaskList() {
   //Liste Tâche
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<TaskModel[]>([]);
 
   const data = tasksFirebase();
 
