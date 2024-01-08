@@ -21,7 +21,7 @@
     display: inline-block;
 }
 
-.row-title-task-list button {
+.row-title-task-list .add-task-button {
     position: absolute;
     right: 25px;
     display: inline-block;

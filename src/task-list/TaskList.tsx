@@ -11,6 +11,7 @@ import ModifyTask from "./modify-task/modify-task";
 
 function TaskList() {
   //Liste Tâche
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [tasks, setTasks] = useState<any[]>([]);
   const data = tasksFirebase();
 
@@ -21,6 +22,14 @@ function TaskList() {
   useEffect(() => {
     setTasks(data);
     setFilteredData(data);
+    data.map((task) => {
+      const isTaskToday = isDateToday(task.date);
+      if (isTaskToday && !task.tags.includes('today')) {
+        task.tags.push('today');
+      }else if (!isTaskToday && task.tags.includes('today')) {
+        task.tags.splice(task.tags.indexOf('today'), 1);
+      }
+    });
   }, [data]);
 
 
@@ -29,11 +38,24 @@ function TaskList() {
     setFilteredData(filteredData);
   };
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
+
+  //filter
   const getNewData = (): TaskModel[] => {  
     return taskFilterRef.current?.getNewFilteredData() || [];
   };
   const setNewData = (newTask: TaskModel): TaskModel[] => {  
     return taskFilterRef.current?.setNewFilteredData(newTask) || [];
+  };
+  const setNewTag = (tag:string): TaskModel[] => {  
+    return taskFilterRef.current?.setNewTagSelected(tag) || [];
+  };
+  const isDateToday = (date: Date): boolean => {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   };
 
   // Modals
@@ -90,7 +112,7 @@ function TaskList() {
       setTasks(updatedTasks);
 
       // Remove on filtered Task
-      const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
+      const updatedFilteredTasks = filteredData.filter(task => task.id !== id);//n'utilise pas le composant filter pour le filtrage
       setFilteredData(updatedFilteredTasks);
 
       await removeTaskFromFirestore(id);
@@ -198,34 +220,30 @@ function TaskList() {
           <ModifyTask task={taskModified} onModifyTask={handleModifyTask} onCloseModal={handleCloseModifyModal} />
         </>
       )}
-
-      <div className="row-title-task-list">
-        <div className="title-task-list">
-            Liste de tâches
-        </div>
-        <button onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
-      </div>
-
-      <TaskFilter 
-        ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
-        data={tasks} onFilterChange={handleFilterChange}
-        getNewFilteredData={function (): TaskModel[] {
-          throw new Error("Function not implemented.");
-        } } setNewFilteredData={function (): void {
-          throw new Error("Function not implemented.");
-        } }
-      />
-
-      <div className="column-task">
-        {filteredData.map((task: TaskModel) => (
-          <div className="separator">
-            <article key={task.id}>
-              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal}/>
-            </article>
+        <div className="row-title-task-list">
+          <div className="title-task-list">
+              Liste de tâches :
           </div>
-        ))}
+          <button className="add-task-button" onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
+        </div>
+
+        <TaskFilter 
+          ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
+          data={tasks} onFilterChange={handleFilterChange}
+          getNewFilteredData={function (): TaskModel[] { throw new Error("getNewFilteredData."); } }
+          setNewFilteredData={function (): void { } } 
+          setNewTagSelected={function (tag: string): void {throw new Error("setNewTagSelected.tag: "+tag);
+          } }        />
+        <div className="column-task">
+          {filteredData.map((task: TaskModel) => (
+            <div className="separator">
+              <article key={task.id}>
+                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onSelectTag={setNewTag} onModifyTask={handleOpenModifyModal}/>
+              </article>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
   );
 }
 
