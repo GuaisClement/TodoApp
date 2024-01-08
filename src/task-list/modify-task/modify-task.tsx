@@ -2,30 +2,31 @@
 
 import React, { useState } from 'react';
 import { TaskModel } from '../../model/task-model';
-import './add-task.css';
+import '../add-task/add-task.css';
 import { IoClose } from 'react-icons/io5';
 
-type AddTaskProps = {
-  onAddTask: (newTask: TaskModel) => void;
-  onCloseModal: () => void;
+type ModifyTaskProps = {
+    task: TaskModel,
+    onModifyTask: (taskModified: TaskModel) => void;
+    onCloseModal: () => void;
 };
 
-const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [dueDate, setDueDate] = useState('');
+const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
+  const [title, setTitle] = useState(props.task.title);
+  const [content, setContent] = useState(props.task.content);
+  const [dueDate, setDueDate] = useState(props.task.date.toISOString().split('T')[0]);
 
   const handleAddTask = () => {
-    const newTask = {
-      id: '',
-      checked: false,
+    const taskModified = {
+      id: props.task.id,
+      checked: props.task.checked,
       title,
       content,
       date: dueDate ? new Date(dueDate) : new Date(),
-      tags : ["tag2"],
+      tags : props.task.tags,
     };
 
-    onAddTask(newTask);
+    props.onModifyTask(taskModified);
     // Réinitialiser le form
     setTitle('');
     setContent('');
@@ -35,10 +36,10 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
   return (
     <div className='modal'>
       <div className='modal-content'>
-        <div className='close' onClick={onCloseModal}>
+        <div className='close' onClick={props.onCloseModal}>
           <IoClose></IoClose>
         </div>
-        <h2>Ajouter une tâche</h2>
+        <h2>Modifier</h2>
         <form>
           <div className='form-element'>
             <label>Titre : </label>
@@ -61,4 +62,4 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
   );
 };
 
-export default AddTask;
+export default ModifyTask;

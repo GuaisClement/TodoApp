@@ -1,0 +1,91 @@
+/* MODAL */
+
+.modal {
+    display: block;
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    width: 400px;
+    height: auto;
+    background-color: #555;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px #333;
+    z-index: 100;
+
+    .modal-content{
+        display: flex;
+        width:100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .close {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        z-index: 1;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+}
+
+/* FORMULAIRE */
+
+form{
+    display: inline-grid;
+}
+
+.form-element{
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+input[type="text"] {
+    width: 300px;
+    background-color: #2e2e2e;  /* Couleur de fond sombre */
+    color: #fff;               /* Couleur du texte clair */
+    border: 1px solid #555;    /* Bordure de couleur plus foncée */
+    padding: 8px;              /* Espacement interne */
+    border-radius: 4px;        /* Coins arrondis */
+    outline: none;             /* Supprime la bordure d'accentuation sur la focus */
+    box-shadow: none;          /* Supprime l'ombre */
+}
+
+input[type="text"]::placeholder {
+    color: #888;  /* Couleur du texte du placeholder */
+}
+
+textarea {
+    max-height: 200px;
+    width: 300px;
+    background-color: #2e2e2e;  /* Couleur de fond sombre */
+    color: #fff;               /* Couleur du texte clair */
+    border: 1px solid #555;    /* Bordure de couleur plus foncée */
+    padding: 8px;              /* Espacement interne */
+    border-radius: 4px;        /* Coins arrondis */
+    outline: none;             /* Supprime la bordure d'accentuation sur la focus */
+    box-shadow: none;          /* Supprime l'ombre */
+    resize: vertical;
+}
+
+textarea::placeholder {
+    color: #888;  /* Couleur du texte du placeholder */
+}
+
+input[type="date"] {
+    background-color: #2e2e2e;  /* Couleur de fond sombre */
+    color: #fff;               /* Couleur du texte clair */
+    border: 1px solid #555;    /* Bordure de couleur plus foncée */
+    padding: 8px;              /* Espacement interne */
+    border-radius: 4px;        /* Coins arrondis */
+    outline: none;             /* Supprime la bordure d'accentuation sur la focus */
+    box-shadow: none;          /* Supprime l'ombre */
+  }
+
+

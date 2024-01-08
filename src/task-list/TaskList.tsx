@@ -7,17 +7,18 @@ import './TaskList.css';
 import {TaskFilter,TaskFilterProps} from './filter/Task-filter';
 import tasksFirebase from "../firebase/hooks/hooksFirebase";
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
+import ModifyTask from "./modify-task/modify-task";
 
 function TaskList() {
   //Liste Tâche
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [tasks, setTasks] = useState<any[]>([]);
-
   const data = tasksFirebase();
 
   //filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
 
+  //Init
   useEffect(() => {
     setTasks(data);
     setFilteredData(data);
@@ -31,10 +32,11 @@ function TaskList() {
     });
   }, [data]);
 
+
+  // Filter
   const handleFilterChange = (filteredData: TaskModel[]) => {    
     setFilteredData(filteredData);
   };
-
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
 
   //filter
@@ -56,27 +58,55 @@ function TaskList() {
     );
   };
 
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Modals
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [taskModified, setTaskModified] = useState<TaskModel>(tasks[0]);
 
   const handleAddTask = async (newTask: TaskModel) => {
 
     try {
-      const taskId = await addTaskToFirestore(newTask);
-      newTask.id = taskId;
+
+      //MAJ Locale
       setTasks([...tasks, newTask]);
-      setIsModalOpen(false);
-      setNewData(newTask);//utilise le composant filter
+      setIsCreateModalOpen(false);
+      setNewData(newTask);
       setFilteredData(getNewData);
+      handleFilterChange;
+
+      const taskId = await addTaskToFirestore(newTask);
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === newTask.id) {
+            return { ...task, id: taskId };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
     } catch (error) {
-      // Gérez les erreurs
+
+      // Remove on task
+      const updatedTasks = tasks.filter(task => task.id !== '');
+      setTasks(updatedTasks);
+
+      // Remove on filtered Task
+      const updatedFilteredTasks = filteredData.filter(task => task.id !== '');
+      setFilteredData(updatedFilteredTasks);
     }
+
+    
   }
 
   const handleRemoveTask = async (id: string) => {
-    try {
-      await removeTaskFromFirestore(id);
 
+    // Sauvegardez la tâche à supprimer
+    const taskToRemove = tasks.find(task => task.id === id);
+
+    try {
+      
       // Remove on task
       const updatedTasks = tasks.filter(task => task.id !== id);
       setTasks(updatedTasks);
@@ -84,42 +114,117 @@ function TaskList() {
       // Remove on filtered Task
       const updatedFilteredTasks = filteredData.filter(task => task.id !== id);//n'utilise pas le composant filter pour le filtrage
       setFilteredData(updatedFilteredTasks);
-    } catch (error) {
-      // Gérez les erreurs
-    }    
-  }
 
-  const handleCheckedTask = async (task: TaskModel) =>{
-    try {
-      await updateTaskInFirestore(task.id, task);
+      await removeTaskFromFirestore(id);
     } catch (error) {
-      // Gérez les erreurs
+
+      if (taskToRemove) {
+        setTasks(prevTasks => [...prevTasks, taskToRemove]);
+      }
     }
     
   }
+
+  const handleCheckedTask = async (checkedtask: TaskModel) =>{
+    try {
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === checkedtask.id) {
+            return { ...task, checked: checkedtask.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
+      await updateTaskInFirestore(checkedtask.id, checkedtask);
+    } catch (error) {
+
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === task.id) {
+            return { ...task, checked: !task.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+    }
+    
+  }
+
+  const handleModifyTask = async (taskModified: TaskModel) => {
+
+    let oldTask: TaskModel[] = tasks;
+
+    try {
+
+      // MAJ Locale
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskModified.id) {
+            return { taskModified };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+      setFilteredData(tasks);
+
+      await updateTaskInFirestore(taskModified.id, taskModified);
+
+    } catch (error) {
+      setTasks(oldTask);
+    }
+    console.log(taskModified);
+    setIsModifyModalOpen(false);
+  }
+
+
+  /* MODALS */
+
+  const handleOpenModifyModal = (task: TaskModel) => {
+    setTaskModified(task);
+    setIsModifyModalOpen(true);
+  }
+
+  const handleCloseModifyModal = () => {
+    setTaskModified(tasks[0]);
+    setIsModifyModalOpen(false);
+  }
   
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  }
  
-    return (
-      <div className="task-list">
-        {isModalOpen && (
-          <>
-            <div className="overlay" onClick={handleCloseModal}></div>
-            <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
-          </>
-        )}
+  /* RETURN */
 
+  return (
+    <div className="task-list">
+      {isCreateModalOpen && (
+        <>
+          <div className="overlay" onClick={handleCloseCreateModal}></div>
+          <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseCreateModal} />
+        </>
+      )}
+
+      {isModifyModalOpen && (
+        <>
+          <div className="overlay" onClick={handleCloseModifyModal}></div>
+          
+          <ModifyTask task={taskModified} onModifyTask={handleModifyTask} onCloseModal={handleCloseModifyModal} />
+        </>
+      )}
         <div className="row-title-task-list">
           <div className="title-task-list">
               Liste de tâches :
           </div>
-          <button className="add-task-button" onClick={handleOpenModal}>Ajouter une Tâche</button>
+          <button className="add-task-button" onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
         </div>
 
         <TaskFilter 
@@ -133,13 +238,13 @@ function TaskList() {
           {filteredData.map((task: TaskModel) => (
             <div className="separator">
               <article key={task.id}>
-                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onSelectTag={setNewTag}/>
+                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onSelectTag={setNewTag} onModifyTask={handleOpenModifyModal}/>
               </article>
             </div>
           ))}
         </div>
       </div>
-    );
+  );
 }
 
 export default TaskList;
