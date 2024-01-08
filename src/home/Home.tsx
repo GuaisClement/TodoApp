@@ -137,7 +137,7 @@ function Home() {
         {tasks.map((task: TaskModel) => (
           <div className="separator">
             <article key={task.id}>
-              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask}/>
+              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModal}/>
             </article>
           </div>
         ))}

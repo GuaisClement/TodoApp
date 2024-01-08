@@ -7,27 +7,28 @@ import './TaskList.css';
 import {TaskFilter,TaskFilterProps} from './filter/Task-filter';
 import tasksFirebase from "../firebase/hooks/hooksFirebase";
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
+import ModifyTask from "./modify-task/modify-task";
 
 function TaskList() {
   //Liste Tâche
   const [tasks, setTasks] = useState<any[]>([]);
-
   const data = tasksFirebase();
 
   //filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
 
+  //Init
   useEffect(() => {
     setTasks(data);
     setFilteredData(data);
   }, [data]);
 
+
+  // Filter
   const handleFilterChange = (filteredData: TaskModel[]) => {    
     setFilteredData(filteredData);
   };
-
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
-
   const getNewData = (): TaskModel[] => {  
     return taskFilterRef.current?.getNewFilteredData() || [];
   };
@@ -35,8 +36,10 @@ function TaskList() {
     return taskFilterRef.current?.setNewFilteredData(newTask) || [];
   };
 
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // Modals
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [taskModified, setTaskModified] = useState<TaskModel>(tasks[0]);
 
   const handleAddTask = async (newTask: TaskModel) => {
 
@@ -44,7 +47,7 @@ function TaskList() {
 
       //MAJ Locale
       setTasks([...tasks, newTask]);
-      setIsModalOpen(false);
+      setIsCreateModalOpen(false);
       setNewData(newTask);
       setFilteredData(getNewData);
       handleFilterChange;
@@ -100,20 +103,20 @@ function TaskList() {
     
   }
 
-  const handleCheckedTask = async (task: TaskModel) =>{
+  const handleCheckedTask = async (checkedtask: TaskModel) =>{
     try {
 
       setTasks(prevTasks => {
         const updatedTasks = prevTasks.map(task => {
-          if (task.id === task.id) {
-            return { ...task, checked: task.checked };
+          if (task.id === checkedtask.id) {
+            return { ...task, checked: checkedtask.checked };
           }
           return task;
         });
         return updatedTasks;
       });
 
-      await updateTaskInFirestore(task.id, task);
+      await updateTaskInFirestore(checkedtask.id, checkedtask);
     } catch (error) {
 
       setTasks(prevTasks => {
@@ -128,52 +131,102 @@ function TaskList() {
     }
     
   }
+
+  const handleModifyTask = async (taskModified: TaskModel) => {
+
+    let oldTask: TaskModel[] = tasks;
+
+    try {
+
+      // MAJ Locale
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskModified.id) {
+            return { taskModified };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+      setFilteredData(tasks);
+
+      await updateTaskInFirestore(taskModified.id, taskModified);
+
+    } catch (error) {
+      setTasks(oldTask);
+    }
+    console.log(taskModified);
+    setIsModifyModalOpen(false);
+  }
+
+
+  /* MODALS */
+
+  const handleOpenModifyModal = (task: TaskModel) => {
+    setTaskModified(task);
+    setIsModifyModalOpen(true);
+  }
+
+  const handleCloseModifyModal = () => {
+    setTaskModified(tasks[0]);
+    setIsModifyModalOpen(false);
+  }
   
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  }
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  }
  
-    return (
-      <div className="task-list">
-        {isModalOpen && (
-          <>
-            <div className="overlay" onClick={handleCloseModal}></div>
-            <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
-          </>
-        )}
+  /* RETURN */
 
-        <div className="row-title-task-list">
-          <div className="title-task-list">
-              Liste de tâches
-          </div>
-          <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+  return (
+    <div className="task-list">
+      {isCreateModalOpen && (
+        <>
+          <div className="overlay" onClick={handleCloseCreateModal}></div>
+          <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseCreateModal} />
+        </>
+      )}
+
+      {isModifyModalOpen && (
+        <>
+          <div className="overlay" onClick={handleCloseModifyModal}></div>
+          
+          <ModifyTask task={taskModified} onModifyTask={handleModifyTask} onCloseModal={handleCloseModifyModal} />
+        </>
+      )}
+
+      <div className="row-title-task-list">
+        <div className="title-task-list">
+            Liste de tâches
         </div>
-
-        <TaskFilter 
-          ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
-          data={tasks} onFilterChange={handleFilterChange}
-          getNewFilteredData={function (): TaskModel[] {
-            throw new Error("Function not implemented.");
-          } } setNewFilteredData={function (): void {
-            throw new Error("Function not implemented.");
-          } }
-        />
-
-        <div className="column-task">
-          {filteredData.map((task: TaskModel) => (
-            <div className="separator">
-              <article key={task.id}>
-                <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask}/>
-              </article>
-            </div>
-          ))}
-        </div>
+        <button onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
       </div>
-    );
+
+      <TaskFilter 
+        ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
+        data={tasks} onFilterChange={handleFilterChange}
+        getNewFilteredData={function (): TaskModel[] {
+          throw new Error("Function not implemented.");
+        } } setNewFilteredData={function (): void {
+          throw new Error("Function not implemented.");
+        } }
+      />
+
+      <div className="column-task">
+        {filteredData.map((task: TaskModel) => (
+          <div className="separator">
+            <article key={task.id}>
+              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal}/>
+            </article>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default TaskList;
