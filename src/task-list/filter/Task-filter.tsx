@@ -13,6 +13,7 @@ type TaskFilterProps = {
   onFilterChange: (filteredData: TaskModel[]) => void;
   getNewFilteredData: () => TaskModel[];
   setNewFilteredData: (newTask: TaskModel) =>  void;
+  setNewTagSelected: (tag: string) => void;
 }
 
 const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) => {
@@ -25,6 +26,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
     setNewFilteredData,
+    setNewTagSelected,
     toggleSortOrder,
   }));
 
@@ -55,22 +57,19 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   };
 
   const setNewFilteredData = (newTask: TaskModel): void => {
-    data.push(newTask);    
+    data.push(newTask);
+    updateFilteredData();
+  }
+
+  const setNewTagSelected = (tag : string ): void => {
+    setSelectedTags([...selectedTags, tag]);
     updateFilteredData();
   }
 
   const getNewFilteredData = (): TaskModel[] => {
     return data.filter((task) => {
       const isTaskChecked = task.checked;
-      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
-      const isTaskToday = isDateToday(task.date);
-
-      if (isTaskToday && !task.tags.includes('today')) {
-        task.tags.push('today');
-      }else if (!isTaskToday && task.tags.includes('today')) {
-        const index = task.tags.indexOf('today');
-        task.tags.splice(index, 1);
-      }
+      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));      
 
       switch (selectedDisplayOption) {
         case 'checked':
@@ -90,15 +89,6 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
       ? [...updatedFilteredData].sort((a, b) => a.date.getTime() - b.date.getTime())
       : [...updatedFilteredData].sort((a, b) => b.date.getTime() - a.date.getTime());
     onFilterChange(sortedData);
-  };
-
-  const isDateToday = (date: Date): boolean => {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
   };
 
   const allTags = Array.from(new Set(data.flatMap((task) => task.tags)));

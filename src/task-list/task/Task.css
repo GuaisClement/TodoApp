@@ -8,6 +8,7 @@
 
 
 /* TITRE */
+    
 
 .row-title-task{
     display: flex;
@@ -15,6 +16,7 @@
     gap: 5px;
     align-items: center;
 }
+
 
 .task-icon {
     font-size: 15px;
@@ -30,7 +32,6 @@
     flex-wrap: wrap; 
     align-items: center;
 }
-  
 
 .tag-button {
     margin-right: 5px;
