@@ -28,34 +28,77 @@ label {
   margin-bottom: 10px; /* Add some space between radio buttons and select */
 }
 
-input[type="radio"],
-select {
-  margin-right: 10px; /* Add some space between options */
+.checkbox-container {
+  display: flex;
 }
 
-/* Style the selected tags section */
+.hidden-checkbox {
+  position: absolute;
+  opacity: 0;
+}
+
+.check-icon {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.hidden-checkbox:checked + .check-icon {
+  
+  color: #007bff; 
+  font-size: 30px; 
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+select::after {
+  content: '\25BC'; 
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select option {
+  background-color:#333;
+}
+
+
+select:focus {
+  border-color: #007bff; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
 div p {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-/* Style the 'X' icon for removing tags */
-span {
-  display: inline-block;
+.tag-button {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px; 
+  padding: 4px 8px; 
+  border: none;
+  cursor: pointer;
   transition: background-color 0.3s;
-  margin-right: 5px;
 }
 
-span > *:hover {
+.tag-button:hover{
   background-color: #555;
-  cursor: pointer;
 }
 
-/* Add styles for the 'X' icon in case you have one (e.g., RxCross1) */
-.RxCross1 {
-  cursor: pointer;
+.cross-icon {
+  margin-left: 4px; 
+  margin-top: 3px;
 }
-
 
 /* Style for the "Select Tag" and "Selected Tags" sections side by side */
 .filter > div > div {

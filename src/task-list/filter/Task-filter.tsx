@@ -2,6 +2,9 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import { TaskModel } from '../../model/task-model';
 import { FaFilter, FaSortAmountUpAlt } from 'react-icons/fa';
 import { FaSortAmountDownAlt } from "react-icons/fa";
+import { MdOutlineCheckBox } from "react-icons/md";
+import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md"
+import { MdOutlineLibraryAddCheck } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import './Task-filter.css'
 
@@ -10,6 +13,7 @@ type TaskFilterProps = {
   onFilterChange: (filteredData: TaskModel[]) => void;
   getNewFilteredData: () => TaskModel[];
   setNewFilteredData: (newTask: TaskModel) =>  void;
+  setNewTagSelected: (tag: string) => void;
 }
 
 const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) => {
@@ -17,20 +21,17 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [selectedDisplayOption, setSelectedDisplayOption] = useState<'checked' | 'unchecked' | 'both'>('both');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-
-  
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');  
 
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
     setNewFilteredData,
+    setNewTagSelected,
     toggleSortOrder,
   }));
 
   const toggleSortOrder = () => {
-    const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-    setSortOrder(newSortOrder);
-    updateFilteredData(); 
+    setSortOrder(prevSortOrder => (prevSortOrder === 'asc' ? 'desc' : 'asc'));
   };
 
   const handleDisplayOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +47,8 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   };
 
   useEffect(() => {
-    // This useEffect will be triggered whenever selectedDisplayOption or selectedTags change
     updateFilteredData();
-  }, [selectedDisplayOption, selectedTags]);
+  }, [selectedDisplayOption, selectedTags, sortOrder]);
 
   const handleRemoveTag = (tag: string) => {
     const newTags = selectedTags.filter((t) => t !== tag);
@@ -57,22 +57,19 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   };
 
   const setNewFilteredData = (newTask: TaskModel): void => {
-    data.push(newTask);    
+    data.push(newTask);
+    updateFilteredData();
+  }
+
+  const setNewTagSelected = (tag : string ): void => {
+    setSelectedTags([...selectedTags, tag]);
     updateFilteredData();
   }
 
   const getNewFilteredData = (): TaskModel[] => {
     return data.filter((task) => {
       const isTaskChecked = task.checked;
-      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));
-      const isTaskToday = isDateToday(task.date);
-
-      if (isTaskToday && !task.tags.includes('today')) {
-        task.tags.push('today');
-      }else if (!isTaskToday && task.tags.includes('today')) {
-        const index = task.tags.indexOf('today');
-        task.tags.splice(index, 1);
-      }
+      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));      
 
       switch (selectedDisplayOption) {
         case 'checked':
@@ -91,17 +88,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     const sortedData = sortOrder === 'asc'
       ? [...updatedFilteredData].sort((a, b) => a.date.getTime() - b.date.getTime())
       : [...updatedFilteredData].sort((a, b) => b.date.getTime() - a.date.getTime());
-
     onFilterChange(sortedData);
-  };
-
-  const isDateToday = (date: Date): boolean => {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
   };
 
   const allTags = Array.from(new Set(data.flatMap((task) => task.tags)));
@@ -120,35 +107,42 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
         {showFilter === true && (
           <div>
-            <div>
+            <div className="checkbox-container">
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="checked"
                 checked={selectedDisplayOption === 'checked'}
                 onChange={handleDisplayOptionChange}
-                />
-                Checked
+                className="hidden-checkbox"
+              />
+              <MdOutlineCheckBox className="check-icon" />
             </label>
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="unchecked"
                 checked={selectedDisplayOption === 'unchecked'}
                 onChange={handleDisplayOptionChange}
-                />
-                Unchecked
+                className="hidden-checkbox"
+              />
+              <MdOutlineCheckBoxOutlineBlank className="check-icon" />
             </label>
             <label>
-                <input
+              <input
                 type="radio"
+                name="displayOption"
                 value="both"
                 checked={selectedDisplayOption === 'both'}
                 onChange={handleDisplayOptionChange}
-                />
-                Both
+                className="hidden-checkbox"
+              />
+              <MdOutlineLibraryAddCheck className="check-icon" />
             </label>
             </div>
+
             <div>
             <label>
               <select onChange={handleTagChange} value="">
@@ -166,10 +160,10 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
             <div>
               {selectedTags.map((tag) => (
-                <span key={tag} >
+                <button key={tag} className="tag-button" onClick={() => handleRemoveTag(tag)}>
                   {tag}
-                  <RxCross1 onClick={() => handleRemoveTag(tag)} />
-                </span>
+                  <RxCross1 className="cross-icon" />
+                </button>
               ))}
             </div>
           </div>
