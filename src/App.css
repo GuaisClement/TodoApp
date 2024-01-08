@@ -1,5 +1,11 @@
+#root {
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 /* App.css */
-
+}
 .App {
   display: flex;
   width: 100%;
@@ -13,3 +19,4 @@ main {
   width: calc(100% - 100px); /* Utilisez calc pour soustraire la largeur de la Taskbar */
   margin-left: 100px; /* Ajoutez une marge gauche pour la Taskbar */
 }
+
