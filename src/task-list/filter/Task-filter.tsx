@@ -69,7 +69,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   const getNewFilteredData = (): TaskModel[] => {
     return data.filter((task) => {
       const isTaskChecked = task.checked;
-      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));      
+      const hasSelectedTags = selectedTags.length === 0 || selectedTags.every((t) => task.tags.includes(t));      
 
       switch (selectedDisplayOption) {
         case 'checked':
