@@ -10,15 +10,14 @@ import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } fr
 import ModifyTask from "./modify-task/modify-task";
 
 function TaskList() {
-  //Liste Tâche
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // Task list
   const [tasks, setTasks] = useState<any[]>([]);
   const data = tasksFirebase();
 
-  //filter
+  // filter
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
 
-  //Init
+  // Init fetch db data
   useEffect(() => {
     setTasks(data);
     setFilteredData(data);
@@ -39,16 +38,22 @@ function TaskList() {
   };
   const taskFilterRef = useRef<TaskFilterProps | null>(null);
 
-  //filter
+  // filter inner action
   const getNewData = (): TaskModel[] => {  
     return taskFilterRef.current?.getNewFilteredData() || [];
   };
-  const setNewData = (newTask: TaskModel): TaskModel[] => {  
+  const addNewData = (newTask: TaskModel): TaskModel[] => {  
     return taskFilterRef.current?.setNewFilteredData(newTask) || [];
   };
-  const setNewTag = (tag:string): TaskModel[] => {
+
+  const setNewData = (tasks: TaskModel[]): TaskModel[] => {  
+    return taskFilterRef.current?.setFilteredData(tasks) || [];
+  };
+
+  const setNewTag = (tag:string): TaskModel[] => {  
     return taskFilterRef.current?.setNewTagSelected(tag) || [];
   };
+
   const isDateToday = (date: Date): boolean => {
     const today = new Date();
     return (
@@ -58,19 +63,21 @@ function TaskList() {
     );
   };
 
-  // Modals
+  // States
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
   const [taskModified, setTaskModified] = useState<TaskModel>(tasks[0]);
 
+
+  /* Actions */
   const handleAddTask = async (newTask: TaskModel) => {
 
     try {
 
-      //MAJ Locale
+      // MAJ Locale
       setTasks([...tasks, newTask]);
       setIsCreateModalOpen(false);
-      setNewData(newTask);
+      addNewData(newTask);
       setFilteredData(getNewData);
       handleFilterChange;
 
@@ -160,19 +167,17 @@ function TaskList() {
 
     try {
 
-      // MAJ Locale
-      setTasks(prevTasks => {
-        const updatedTasks = prevTasks.map(task => {
-          if (task.id === taskModified.id) {
-            return { taskModified };
-          }
-          return task;
-        });
-        return updatedTasks;
-      });
-      setFilteredData(tasks);
 
-      await updateTaskInFirestore(taskModified.id, taskModified);
+      const taskIndex = tasks.findIndex(task => task.id === taskModified.id);
+
+      if (taskIndex !== -1) {
+        const updatedTasks = [...tasks];
+        updatedTasks[taskIndex] = taskModified;
+        setTasks(updatedTasks);
+        setNewData(updatedTasks);
+  
+        await updateTaskInFirestore(taskModified.id, taskModified);
+      }
 
     } catch (error) {
       setTasks(oldTask);
@@ -182,7 +187,7 @@ function TaskList() {
   }
 
 
-  /* MODALS */
+  /* MODALS  visibility*/
 
   const handleOpenModifyModal = (task: TaskModel) => {
     setTaskModified(task);
@@ -231,7 +236,8 @@ function TaskList() {
           ref={taskFilterRef as React.MutableRefObject<TaskFilterProps | null>}
           data={tasks} onFilterChange={handleFilterChange}
           getNewFilteredData={function (): TaskModel[] { throw new Error("getNewFilteredData."); } }
-          setNewFilteredData={function (): void { } } 
+          setNewFilteredData={function (): void { } }
+          setFilteredData={function (): void { }} 
           setNewTagSelected={function (tag: string): void {throw new Error("setNewTagSelected.tag: "+tag);
           } }        />
         <div className="column-task">

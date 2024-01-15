@@ -68,29 +68,27 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
           <div className='form-element'>
-            <label>Tags : </label>
-            <div>
-              <input
-                type="text"
-                value={tagInput}
-                placeholder='Ajouter un tag'
-                onChange={(e) => setTagInput(e.target.value)}
-              />
-              <button type="button" onClick={handleAddTag}>
-                Ajouter Tag
-              </button>
-            </div>
-            <div>
+            
+            <button type="button" onClick={handleAddTag}>
+              Ajouter Tag
+            </button>
+            <input
+              type="text"
+              value={tagInput}
+              placeholder='Ajouter un tag'
+              onChange={(e) => setTagInput(e.target.value)}
+            />
+          </div>
+          <div >
               {tags.map((tag) => (
                 <span key={tag} className="tag">                  
-                  <button type="button" onClick={() => handleRemoveTag(tag)}>
+                  <button type="button" className='tag' onClick={() => handleRemoveTag(tag)}>
                   {tag}
                   &times;
                   </button>
                 </span>
               ))}
             </div>
-          </div>
           <button type="button" onClick={handleAddTask} disabled={!title.trim()}>
             Ajouter
           </button>
