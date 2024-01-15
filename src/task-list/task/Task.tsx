@@ -30,6 +30,10 @@ const Task: React.FC<Props> = (props: Props) => {
     useEffect(() => {
       getTaskFromFirestore(props.taskId).then(setTask);
     }, []);
+
+    useEffect(() => {
+      setTask(props.task)
+    }, [props]);
   
     const handleOpen = () => {
       setOpen(true);

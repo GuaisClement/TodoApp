@@ -39,3 +39,6 @@ npm run dev
    - Mode Nuit/Jour
    - Persistance des données
    - Version déployée
+
+## About us
+This project has been created by a group of students from the ESEO Engineering School in Angers, France. We are 4 students in the 5th year of the school in the Software Engineering.

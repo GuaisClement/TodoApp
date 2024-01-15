@@ -34,6 +34,7 @@ function Home() {
       return taskDateOnly === today;
     });
     setFilteredData(tasksForToday);
+    console.log(tasksForToday);
   }
 
   // States
@@ -137,6 +138,8 @@ function Home() {
   // Modify the task
   const handleModifyTask = async (taskModified: TaskModel) => {
 
+    console.log(taskModified);
+
     // Save a backup
     let oldTask: TaskModel[] = [...tasks];
 
@@ -212,9 +215,8 @@ function Home() {
         {filteredData.map((task: TaskModel) => (
           <div className="separator">
             <article key={task.id}>
-              <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {
-                
-              } } onFav={()=>{}}/>
+              <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} 
+              onSelectTag={function (tag: string): void {} } onFav={()=>{}}/>
             </article>
           </div>
         ))}
