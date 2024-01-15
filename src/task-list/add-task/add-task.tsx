@@ -14,6 +14,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [tags, setTags] = useState<string[]>([]);  
+  const [tagInput, setTagInput] = useState('');
 
   const handleAddTask = () => {
     const newTask = {
@@ -22,8 +24,8 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
       title,
       content,
       date: dueDate ? new Date(dueDate) : new Date(),
-      tags : ["tag2"],
       favorite: false,
+      tags,
     };
 
     onAddTask(newTask);
@@ -31,6 +33,19 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
     setTitle('');
     setContent('');
     setDueDate('');
+    setTags([]);
+  };
+
+  
+  const handleAddTag = () => {
+    if (tagInput.trim() !== '') {
+      setTags((prevTags) => [...prevTags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
   };
 
   return (
@@ -53,6 +68,28 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
             <label> Date d'échéance : </label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
+          <div className='form-element'>
+            
+            <button type="button" onClick={handleAddTag}>
+              Ajouter Tag
+            </button>
+            <input
+              type="text"
+              value={tagInput}
+              placeholder='Ajouter un tag'
+              onChange={(e) => setTagInput(e.target.value)}
+            />
+          </div>
+          <div >
+              {tags.map((tag) => (
+                <span key={tag} className="tag">                  
+                  <button type="button" className='tag' onClick={() => handleRemoveTag(tag)}>
+                  {tag}
+                  &times;
+                  </button>
+                </span>
+              ))}
+            </div>
           <button type="button" onClick={handleAddTask} disabled={!title.trim()}>
             Ajouter
           </button>

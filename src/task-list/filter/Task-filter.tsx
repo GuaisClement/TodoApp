@@ -13,6 +13,7 @@ type TaskFilterProps = {
   onFilterChange: (filteredData: TaskModel[]) => void;
   getNewFilteredData: () => TaskModel[];
   setNewFilteredData: (newTask: TaskModel) =>  void;
+  setFilteredData: (tasks: TaskModel[]) =>  void;
   setNewTagSelected: (tag: string) => void;
 }
 
@@ -26,6 +27,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
     setNewFilteredData,
+    setFilteredData,
     setNewTagSelected,
     toggleSortOrder,
   }));
@@ -61,15 +63,23 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     updateFilteredData();
   }
 
-  const setNewTagSelected = (tag : string ): void => {
-    setSelectedTags([...selectedTags, tag]);
+  const setFilteredData = (tasks: TaskModel[]): void => {
+    data= tasks;
     updateFilteredData();
   }
+
+  const setNewTagSelected = (tag: string): void => {
+    if (!selectedTags.includes(tag)) {
+      setSelectedTags([...selectedTags, tag]);
+      updateFilteredData();
+    }
+  }
+  
 
   const getNewFilteredData = (): TaskModel[] => {
     return data.filter((task) => {
       const isTaskChecked = task.checked;
-      const hasSelectedTags = selectedTags.length === 0 || selectedTags.some((t) => task.tags.includes(t));      
+      const hasSelectedTags = selectedTags.length === 0 || selectedTags.every((t) => task.tags.includes(t));      
 
       switch (selectedDisplayOption) {
         case 'checked':

@@ -1,22 +1,29 @@
-// AddTask.js (ou AddTask.jsx si vous utilisez JavaScript)
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TaskModel } from '../../model/task-model';
 import '../add-task/add-task.css';
 import { IoClose } from 'react-icons/io5';
 
 type ModifyTaskProps = {
-    task: TaskModel,
-    onModifyTask: (taskModified: TaskModel) => void;
-    onCloseModal: () => void;
+  task: TaskModel;
+  onModifyTask: (taskModified: TaskModel) => void;
+  onCloseModal: () => void;
 };
 
 const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
   const [title, setTitle] = useState(props.task.title);
   const [content, setContent] = useState(props.task.content);
   const [dueDate, setDueDate] = useState(props.task.date.toISOString().split('T')[0]);
+  const [tags, setTags] = useState<string[]>(props.task.tags);
+  const [tagInput, setTagInput] = useState('');
 
-  const handleAddTask = () => {
+  useEffect(() => {
+    setTitle(props.task.title);
+    setContent(props.task.content);
+    setDueDate(props.task.date.toISOString().split('T')[0]);
+    setTags(props.task.tags);
+  }, [props.task]);
+
+  const handleModifyTask = () => {
     const taskModified = {
       id: props.task.id,
       checked: props.task.checked,
@@ -32,6 +39,19 @@ const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
     setTitle('');
     setContent('');
     setDueDate('');
+    setTags([]);
+    setTagInput('');
+  };
+
+  const handleAddTag = () => {
+    if (tagInput.trim() !== '') {
+      setTags((prevTags) => [...prevTags, tagInput.trim()]);
+      setTagInput('');
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag !== tagToRemove));
   };
 
   return (
@@ -54,8 +74,27 @@ const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
             <label> Date d'échéance : </label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
-          <button type="button" onClick={handleAddTask} disabled={!title.trim()}>
-            Ajouter
+          <div className="form-element">
+            <button type="button" onClick={handleAddTag}>
+              Ajouter Tag
+            </button>
+            <input
+              type="text"
+              value={tagInput}
+              placeholder='Ajouter un tag'
+              onChange={(e) => setTagInput(e.target.value)}
+            />
+          </div>
+          <div >
+            {tags.map((tag) => (
+              <button key={tag} type="button" className='tag' onClick={() => handleRemoveTag(tag)}>
+                {tag}
+                &times;
+              </button>
+            ))}
+          </div>
+          <button type="button" onClick={handleModifyTask} disabled={!title.trim()}>
+            Modifier
           </button>
         </form>
       </div>
