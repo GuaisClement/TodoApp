@@ -44,5 +44,5 @@ npm run dev
    - Persistance des données
    - Version déployée
 
-## About us
-This project has been created by a group of students from the ESEO Engineering School in Angers, France. We are 4 students in the 5th year of the school in the Software Engineering.
+## A propos de nous
+Ce projet a été créé par un groupe d'étudiants de l'école d'ingénieurs ESEO à Angers, France. Nous sommes 4 étudiants en 5ème année de l'école dans la filière Génie Logiciel.
