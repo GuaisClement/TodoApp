@@ -13,6 +13,7 @@ type TaskFilterProps = {
   onFilterChange: (filteredData: TaskModel[]) => void;
   getNewFilteredData: () => TaskModel[];
   setNewFilteredData: (newTask: TaskModel) =>  void;
+  setFilteredData: (tasks: TaskModel[]) =>  void;
   setNewTagSelected: (tag: string) => void;
 }
 
@@ -26,6 +27,7 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
   useImperativeHandle(ref, () => ({
     getNewFilteredData,
     setNewFilteredData,
+    setFilteredData,
     setNewTagSelected,
     toggleSortOrder,
   }));
@@ -58,6 +60,11 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
 
   const setNewFilteredData = (newTask: TaskModel): void => {
     data.push(newTask);
+    updateFilteredData();
+  }
+
+  const setFilteredData = (tasks: TaskModel[]): void => {
+    data= tasks;
     updateFilteredData();
   }
 

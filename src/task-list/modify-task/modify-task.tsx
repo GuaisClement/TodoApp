@@ -73,27 +73,24 @@ const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
             <label> Date d'échéance : </label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
-          <div className="tag-container">
-            <div className="tag-input-container">
-              <label>Tags : </label>
-              <input
-                type="text"
-                value={tagInput}
-                placeholder='Ajouter un tag'
-                onChange={(e) => setTagInput(e.target.value)}
-              />
-              <button type="button" onClick={handleAddTag}>
-                Ajouter Tag
+          <div className="form-element">
+            <button type="button" onClick={handleAddTag}>
+              Ajouter Tag
+            </button>
+            <input
+              type="text"
+              value={tagInput}
+              placeholder='Ajouter un tag'
+              onChange={(e) => setTagInput(e.target.value)}
+            />
+          </div>
+          <div >
+            {tags.map((tag) => (
+              <button key={tag} type="button" className='tag' onClick={() => handleRemoveTag(tag)}>
+                {tag}
+                &times;
               </button>
-            </div>
-            <div className="tag-buttons">
-              {tags.map((tag) => (
-                <button key={tag} type="button" onClick={() => handleRemoveTag(tag)}>
-                  {tag}
-                  &times;
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
           <button type="button" onClick={handleModifyTask} disabled={!title.trim()}>
             Modifier
