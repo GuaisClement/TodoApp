@@ -1,48 +1,47 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import Button from './Button'
+import React, { useEffect, useState } from 'react';
+import './App.css';
+import Taskbar from './header/Taskbar';
+// import 'react-calendar/dist/Calendar.css';
+import MyCalendar from './calendar/calendar';
+import TaskList from './task-list/TaskList';
+import Home from './home/Home';
+import Favorite from './favorite/favorite';
+import { CiDark, CiLight } from "react-icons/ci";
 
 function App() {
-  const [count, setCount] = useState<number>(0);
-  const [age, setAge] = useState<number>(0);
+  const [activeView, setActiveView] = useState('home');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-
-  useEffect(() =>{
-    console.log('le compteur a changé '+ count);
-
-  },[count]);
-
-  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.currentTarget.value);
-
-    if (!isNaN(value)) {
-      setAge(value);
-    }
+  const toggleDarkMode = () => {
+      setIsDarkMode(!isDarkMode);
   };
 
-  const onValidateClick = () => {
-    if (age < 18) {
-      console.log('mineur');
-    } else {
-      console.log('majeur');
-    }
+  const switchView = (view: React.SetStateAction<string>) => {
+    setActiveView(view);
   };
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--bg-color', isDarkMode ? '#242424' : '#ffffff');
+    root.style.setProperty('--bg-color-oposite', isDarkMode ? '#ffffff' : '#242424');
+}, [isDarkMode]);
 
   return (
-    <>
-      <div className="card">
-        <div>Compteur : {count} </div>
-        <Button label='+' onClick={() => setCount((count) => count + 1)}></Button>
-        <Button label='-' onClick={() => setCount((count) => count - 1)}></Button>
-        <Button label='reset' onClick={() => setCount(0)}></Button>
-      </div>
+    <div className={`App ${isDarkMode ? 'Component-dark-mode' : 'Component-light-mode'}`}>      
+      
 
-      <div>
-        <input type='text' placeholder='Age ?' value={age} onChange={onTextChange} />
-        <Button label='Valider' onClick={onValidateClick}></Button>
+      <main>
+      <Taskbar isDarkMode={isDarkMode} switchView={switchView} />
+      <div className="toggleDarkMode" onClick={toggleDarkMode}>
+        {isDarkMode ? <CiLight /> : <CiDark />}
       </div>
-    </>
-  )
+        {activeView === 'home' && <Home></Home>}
+        {activeView === 'list' && <TaskList></TaskList>}
+        {activeView === 'fav' && <Favorite></Favorite>}
+        {activeView === 'calendar' && <p><MyCalendar/></p>}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;

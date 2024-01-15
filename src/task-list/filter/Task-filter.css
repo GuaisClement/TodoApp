@@ -1,0 +1,113 @@
+/* Additional styles for the filter container */
+.filter {
+  display: flex;
+  flex-direction: column; /* Display children in a column layout */
+  align-items: flex-start; /* Align children to the start (left) */
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.filter-icon > * {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px; /* Adjust padding as needed */
+  transition: background-color 0.3s;
+  height: 32px; /* Set a specific height */
+  width: 32px; /* Set a specific width */
+}
+
+.filter-icon > *:hover {
+  background-color: #555;
+}
+
+/* Style the radio buttons and select dropdown */
+label {
+  display: block;
+  margin-bottom: 10px; /* Add some space between radio buttons and select */
+}
+
+.checkbox-container {
+  display: flex;
+}
+
+.hidden-checkbox {
+  position: absolute;
+  opacity: 0;
+}
+
+.check-icon {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.hidden-checkbox:checked + .check-icon {
+  
+  color: #007bff; 
+  font-size: 30px; 
+}
+
+select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+select::after {
+  content: '\25BC'; 
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+select option {
+  background-color:#333;
+}
+
+
+select:focus {
+  border-color: #007bff; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+div p {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.tag-button {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px; 
+  padding: 4px 8px; 
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tag-button:hover{
+  background-color: #555;
+}
+
+.cross-icon {
+  margin-left: 4px; 
+  margin-top: 3px;
+}
+
+/* Style for the "Select Tag" and "Selected Tags" sections side by side */
+.filter > div > div {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+/* Adjust spacing as needed */
+.filter > div > div > label,
+.filter > div > div > div {
+  margin-right: 10px;
+}
