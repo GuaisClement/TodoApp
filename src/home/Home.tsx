@@ -34,7 +34,6 @@ function Home() {
       return taskDateOnly === today;
     });
     setFilteredData(tasksForToday);
-    console.log(tasksForToday);
   }
 
   // States
@@ -137,8 +136,6 @@ function Home() {
 
   // Modify the task
   const handleModifyTask = async (taskModified: TaskModel) => {
-
-    console.log(taskModified);
 
     // Save a backup
     let oldTask: TaskModel[] = [...tasks];
