@@ -61,10 +61,13 @@ const TaskFilter = forwardRef(({ data, onFilterChange }: TaskFilterProps, ref) =
     updateFilteredData();
   }
 
-  const setNewTagSelected = (tag : string ): void => {
-    setSelectedTags([...selectedTags, tag]);
-    updateFilteredData();
+  const setNewTagSelected = (tag: string): void => {
+    if (!selectedTags.includes(tag)) {
+      setSelectedTags([...selectedTags, tag]);
+      updateFilteredData();
+    }
   }
+  
 
   const getNewFilteredData = (): TaskModel[] => {
     return data.filter((task) => {

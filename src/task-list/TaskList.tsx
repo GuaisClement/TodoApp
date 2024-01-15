@@ -46,7 +46,7 @@ function TaskList() {
   const setNewData = (newTask: TaskModel): TaskModel[] => {  
     return taskFilterRef.current?.setNewFilteredData(newTask) || [];
   };
-  const setNewTag = (tag:string): TaskModel[] => {  
+  const setNewTag = (tag:string): TaskModel[] => {
     return taskFilterRef.current?.setNewTagSelected(tag) || [];
   };
   const isDateToday = (date: Date): boolean => {
@@ -156,7 +156,7 @@ function TaskList() {
 
   const handleModifyTask = async (taskModified: TaskModel) => {
 
-    let oldTask: TaskModel[] = tasks;
+    const oldTask: TaskModel[] = tasks;
 
     try {
 
