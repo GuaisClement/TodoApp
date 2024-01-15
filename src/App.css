@@ -12,7 +12,29 @@
   min-height: 97vh;
 }
 
+.Component-light-mode {
+  background-color: var(--bg-color-light); /* Utilisation de la variable pour le fond */
+  color: var(--bg-color-dark); /* Couleur du texte en mode jour */
+}
+
+.Component-dark-mode {
+  background-color: var(--bg-color-dark); /* Utilisation de la variable pour le fond en mode nuit */
+  color: var(--bg-color-light); /* Couleur du texte en mode nuit */
+}
+
+.toggleDarkMode {
+  font-size: 25px;
+  cursor: pointer;
+  height: 25px;
+  width: 25px;
+}
+
+.toggleDarkMode:hover{
+  color: #555;
+}
+
 main {
+  /* background-color: var(--bg-color-dark); */
   flex: 1;
   height: 100%;
   overflow-y: auto;

@@ -4,8 +4,6 @@
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
-  background-color: #333;
-  color: white;
   height: 100%;
   width: 100px;
   position: fixed;
