@@ -19,6 +19,7 @@ type Props = {
   onChecked: (task: TaskModel) => void;
   onModifyTask: (task: TaskModel) => void;
   onSelectTag: (tag: string) => void;
+  onFav: (task: TaskModel) => void;
 };
 
 const Task: React.FC<Props> = (props: Props) => {
@@ -75,9 +76,10 @@ const Task: React.FC<Props> = (props: Props) => {
   const handleToggleFavorite = async () => {
     if (!task) return;
 
-    const updatedFavorite = !task.favorite;
-    const updatedTask = { ...task, favorite: updatedFavorite };
-    setTask({ ...task, favorite: updatedFavorite });
+    const updatedTask = { ...task, favorite: !task.favorite };
+    setTask({ ...updatedTask });
+
+    props.onFav(updatedTask);
     await updateTaskInFirestore(task.id, updatedTask);
   };
 

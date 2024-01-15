@@ -37,7 +37,7 @@ function App() {
       </div>
         {activeView === 'home' && <Home></Home>}
         {activeView === 'list' && <TaskList></TaskList>}
-        {activeView === 'check' && <Favorite></Favorite>}
+        {activeView === 'fav' && <Favorite></Favorite>}
         {activeView === 'calendar' && <p><MyCalendar/></p>}
       </main>
     </div>

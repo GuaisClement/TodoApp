@@ -244,7 +244,7 @@ function TaskList() {
           {filteredData.map((task: TaskModel) => (
             <div className="separator">
               <article key={task.id}>
-                <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onSelectTag={setNewTag} onModifyTask={handleOpenModifyModal}
+                <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onSelectTag={setNewTag} onModifyTask={handleOpenModifyModal} onFav={()=>{}}
                 />
               </article>
             </div>

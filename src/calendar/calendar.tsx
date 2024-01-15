@@ -230,7 +230,7 @@ const MyCalendar = () => {
 
         {filteredData.map((taskModel: TaskModel, index) => (
           <div className="separator" key={taskModel.id}>
-            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {            } } />
+            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {            } } onFav={()=>{}} />
           </div>
         ))}
       </div>
