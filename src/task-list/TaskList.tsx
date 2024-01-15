@@ -182,7 +182,6 @@ function TaskList() {
     } catch (error) {
       setTasks(oldTask);
     }
-    console.log(taskModified);
     setIsModifyModalOpen(false);
   }
 
