@@ -31,6 +31,11 @@ npm run dev
    - Modifier une tâche
    - indiquer une tâche comme faite ou pas
 3. Autres :
+   - 4 onglets :
+      - Home (Aujourd'hui)
+      - Liste
+      - Calendrier
+      - Favori
    - Mode Nuit/Jour
    - Persistance des données
    - Version déployée
