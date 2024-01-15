@@ -4,41 +4,57 @@ import { useEffect, useRef, useState } from "react";
 
 import tasksFirebase from "../firebase/hooks/hooksFirebase";
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
-import { ref } from "firebase/database";
 import AddTask from "../task-list/add-task/add-task";
-import { TaskFilterProps, TaskFilter } from "../task-list/filter/Task-filter";
 import Task from "../task-list/task/Task";
 import './Home.css';
+import ModifyTask from "../task-list/modify-task/modify-task";
 
 function Home() {
-  //Liste Tâche
+  // Tasks list
   const [tasks, setTasks] = useState<any[]>([]);
 
   const data = tasksFirebase();
 
+  // fetch db data
   useEffect(() => {
-    // Suppose que la propriété "date" dans chaque tâche est un objet Date valide
-    const today = new Date().toDateString();
-    // Filtrer les tâches pour n'inclure que celles de la date d'aujourd'hui
-    const todayTasks = data.filter(task => task.date.toDateString() === today);
-
-    setTasks(todayTasks);
+    setTasks(data);
   }, [data]);
 
+  // Update filtered task each change on tasks
+  useEffect(() => {
+    filterTasks();
+  }, [tasks]);
 
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const filterTasks = async () => {
+    const tasksForToday = tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      const taskDateOnly = taskDate.toDateString();
 
+      const today = new Date().toDateString();
+      return taskDateOnly === today;
+    });
+    setFilteredData(tasksForToday);
+  }
+
+  // States
+  const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [taskModified, setTaskModified] = useState<TaskModel>(tasks[0]);
+
+  // Ajouter Task
   const handleAddTask = async (newTask: TaskModel) => {
 
     try {
 
-      //MAJ Locale
+      // Change Front
       setTasks([...tasks, newTask]);
-      setIsModalOpen(false);
+      setIsCreateModalOpen(false);
 
+      // Update DB and retrieve ID
       const taskId = await addTaskToFirestore(newTask);
 
+      // Set Id
       setTasks(prevTasks => {
         const updatedTasks = prevTasks.map(task => {
           if (task.id === newTask.id) {
@@ -51,28 +67,33 @@ function Home() {
 
     } catch (error) {
 
-      // Remove on task
+      // Remove the new task
       const updatedTasks = tasks.filter(task => task.id !== '');
       setTasks(updatedTasks);
+
+      //Add log
     }
 
     
   }
 
+  // Remove Task
   const handleRemoveTask = async (id: string) => {
 
-    // Sauvegardez la tâche à supprimer
+    // Save removed task
     const taskToRemove = tasks.find(task => task.id === id);
 
     try {
       
-      // Remove on task
+      // Change Front
       const updatedTasks = tasks.filter(task => task.id !== id);
       setTasks(updatedTasks);
 
+      // Update DB
       await removeTaskFromFirestore(id);
     } catch (error) {
 
+      // add the removed task
       if (taskToRemove) {
         setTasks(prevTasks => [...prevTasks, taskToRemove]);
       }
@@ -80,26 +101,30 @@ function Home() {
     
   }
 
-  const handleCheckedTask = async (task: TaskModel) =>{
+  // Check Task
+  const handleCheckedTask = async (taskChecked: TaskModel) =>{
     try {
 
+      // Change Front 
       setTasks(prevTasks => {
         const updatedTasks = prevTasks.map(task => {
-          if (task.id === task.id) {
-            return { ...task, checked: task.checked };
+          if (task.id === taskChecked.id) {
+            return { ...task, checked: taskChecked.checked };
           }
           return task;
         });
         return updatedTasks;
       });
 
-      await updateTaskInFirestore(task.id, task);
+      // Update DB
+      await updateTaskInFirestore(taskChecked.id, taskChecked);
     } catch (error) {
 
+      // Remove the change
       setTasks(prevTasks => {
         const updatedTasks = prevTasks.map(task => {
-          if (task.id === task.id) {
-            return { ...task, checked: !task.checked };
+          if (task.id === taskChecked.id) {
+            return { ...task, checked: !taskChecked.checked };
           }
           return task;
         });
@@ -108,21 +133,71 @@ function Home() {
     }
     
   }
-  
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  // Modify the task
+  const handleModifyTask = async (taskModified: TaskModel) => {
+
+    // Save a backup
+    let oldTask: TaskModel[] = [...tasks];
+
+    try {
+
+      // Change Front
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskModified.id) {
+            return taskModified;
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+      
+      // Update DB
+      await updateTaskInFirestore(taskModified.id, taskModified);
+
+    } catch (error) {
+
+      // use Backup
+      setTasks(oldTask);
+    }
+    
+    setIsModifyModalOpen(false);
+  }
+  
+  /* MODALS  Visibility */
+  const handleOpenModifyModal = (task: TaskModel) => {
+    setTaskModified(task);
+    setIsModifyModalOpen(true);
+  }
+
+  const handleCloseModifyModal = () => {
+    setTaskModified(tasks[0]);
+    setIsModifyModalOpen(false);
+  }
+  
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  }
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  }
 
   return (
     <div className="task-list">
-      {isModalOpen && (
+      {isCreateModalOpen && (
         <>
-          <div className="overlay" onClick={handleCloseModal}></div>
-          <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
+          <div className="overlay" onClick={handleCloseCreateModal}></div>
+          <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseCreateModal} />
+        </>
+      )}
+
+      {isModifyModalOpen && (
+        <>
+          <div className="overlay" onClick={handleCloseModifyModal}></div>
+          
+          <ModifyTask task={taskModified} onModifyTask={handleModifyTask} onCloseModal={handleCloseModifyModal} />
         </>
       )}
 
@@ -130,14 +205,14 @@ function Home() {
         <div className="title-task-list">
             Aujourd'hui
         </div>
-        <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+        <button onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
       </div>
 
       <div className="column-task">
-        {tasks.map((task: TaskModel) => (
+        {filteredData.map((task: TaskModel) => (
           <div className="separator">
             <article key={task.id}>
-              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModal}/>
+              <Task task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={() =>{}}/>
             </article>
           </div>
         ))}

@@ -42,48 +42,73 @@ const MyCalendar = () => {
     }
   }
   
-const newTasks = async () => {
-  const tasksForSelectedDate = tasks.filter(task => {
-    const taskDate = new Date(task.date);
-    const taskDateOnly = taskDate.toDateString();
+  const newTasks = async () => {
+    const tasksForSelectedDate = tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      const taskDateOnly = taskDate.toDateString();
 
-    let valueDateOnly: string | undefined;
+      let valueDateOnly: string | undefined;
 
-    if (date instanceof Date) {
-      valueDateOnly = date.toDateString();
-    } else if (Array.isArray(date) && date[0] instanceof Date) {
-      valueDateOnly = date[0].toDateString();
-    }
-    return taskDateOnly === valueDateOnly;
-  });
-  setFilteredData(tasksForSelectedDate);
-}
+      if (date instanceof Date) {
+        valueDateOnly = date.toDateString();
+      } else if (Array.isArray(date) && date[0] instanceof Date) {
+        valueDateOnly = date[0].toDateString();
+      }
+      return taskDateOnly === valueDateOnly;
+    });
+    setFilteredData(tasksForSelectedDate);
+  }
 
-
+  // Remove a task
   const handleRemoveTask = async (id: string) => {
 
     try {
-      await removeTaskFromFirestore(id);
 
-      // Remove on task
+      // Change front
       const updatedTasks = tasks.filter(task => task.id !== id);
       setTasks(updatedTasks);
 
-      // Remove on filtered Task
-      const updatedFilteredTasks = filteredData.filter(task => task.id !== id);
-      setFilteredData(updatedFilteredTasks);
+      // Update DB
+      await removeTaskFromFirestore(id);
+
     } catch (error) {
       // Gérez les erreurs
     }
     
   }
-  
 
-  const handleCheckedTask = async (task: TaskModel) => {
+  // Check a task
+  const handleCheckedTask = async (taskChecked: TaskModel) => {
+
     try {
-      const taskId = await updateTaskInFirestore(task.id, task);
+
+      // Change front
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskChecked.id) {
+            return { ...task, checked: taskChecked.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
+      // Update DB
+      await updateTaskInFirestore(taskChecked.id, taskChecked);
     } catch (error) {
-      // Gérez les erreurs
+    
+      // If error rolback
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskChecked.id) {
+            return { ...task, checked: !taskChecked.checked };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+
+      // To replace witn log
       console.error("Erreur lors de la mise à jour de la tâche:", error);
     }
   };

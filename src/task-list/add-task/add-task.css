@@ -42,7 +42,7 @@ form{
 .form-element{
     display: grid;
     grid-template-columns: 1fr 2fr; 
-    gap: 10px;
+    gap: 4px;
     margin-bottom: 10px;
 }
 

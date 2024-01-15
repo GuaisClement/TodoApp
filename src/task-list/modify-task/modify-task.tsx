@@ -54,7 +54,7 @@ const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} />
           </div>
           <button type="button" onClick={handleAddTask} disabled={!title.trim()}>
-            Ajouter
+            Modifier
           </button>
         </form>
       </div>
