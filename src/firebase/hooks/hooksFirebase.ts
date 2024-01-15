@@ -22,6 +22,7 @@ function tasksFirebase() {
           const content: string = taskData.content;
           const date: Date = taskData.date.toDate();
           const tags: string[] = taskData.tags;
+          const favorite: boolean = taskData.favorite;
 
           const transformedTask: TaskModel = {
             id: id,
@@ -30,6 +31,7 @@ function tasksFirebase() {
             content: content,
             date: date, // Assurez-vous de convertir Timestamp en Date si c'est le cas
             tags: tags,
+            favorite: favorite,
           };
           return transformedTask;
         });

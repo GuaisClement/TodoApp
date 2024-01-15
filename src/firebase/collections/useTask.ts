@@ -1,8 +1,27 @@
 // taskFunctions.js
-import { collection, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore';
 import app from '../firebase'; // Assurez-vous que le chemin est correct
 import { TaskModel } from '../../model/task-model';
 import { getFirestore } from 'firebase/firestore';
+
+export const getTaskFromFirestore = async (id: string): Promise<TaskModel> => {
+  try {
+    const db = getFirestore(app);
+    const docRef = await getDoc(doc(db, 'Task', id));
+    const taskModel = docRef.data();
+
+    if (!taskModel) throw new Error("Failed to fetch data");
+
+    const transformedDate: Date = taskModel.date.toDate();
+
+    const result = { ...docRef.data(), id, date: transformedDate };
+
+    return result as TaskModel;
+  } catch (error) {
+    console.error(`Error during fetch task process in firestore ${error}`);
+    throw error;
+  }
+}
 
 export const addTaskToFirestore = async (taskData: any) => {
     
@@ -14,7 +33,8 @@ export const addTaskToFirestore = async (taskData: any) => {
         title: taskData.title,
         content: taskData.content,
         date: taskData.date,
-        tags : taskData.tags
+        tags : taskData.tags,
+        favorite: false
     });
     return docRef.id;
   } catch (error) {

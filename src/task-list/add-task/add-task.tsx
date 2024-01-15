@@ -23,6 +23,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onAddTask, onCloseModal }) => {
       content,
       date: dueDate ? new Date(dueDate) : new Date(),
       tags : ["tag2"],
+      favorite: false,
     };
 
     onAddTask(newTask);

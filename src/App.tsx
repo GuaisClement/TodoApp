@@ -5,6 +5,7 @@ import Taskbar from './header/Taskbar';
 import MyCalendar from './calendar/calendar';
 import TaskList from './task-list/TaskList';
 import Home from './home/Home';
+import Favorite from './favorite/favorite';
 
 function App() {
   const [activeView, setActiveView] = useState('home');
@@ -19,7 +20,7 @@ function App() {
       <main>
         {activeView === 'home' && <Home></Home>}
         {activeView === 'list' && <TaskList></TaskList>}
-        {activeView === 'check' && <p>Contenu de la vue Check</p>}
+        {activeView === 'check' && <Favorite></Favorite>}
         {activeView === 'calendar' && <p><MyCalendar/></p>}
       </main>
     </div>

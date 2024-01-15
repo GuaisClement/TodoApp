@@ -34,6 +34,13 @@
     cursor: pointer;
 }
 
+.favorite-icon{
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
 .task-tags {
     display: flex;
     flex-wrap: wrap; 

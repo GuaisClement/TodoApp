@@ -1,24 +1,21 @@
 
 import { useEffect, useState } from "react";
-import { TaskModel } from "../model/task-model";
-
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
 import tasksFirebase from "../firebase/hooks/hooksFirebase";
+import { TaskModel } from "../model/task-model";
 import AddTask from "../task-list/add-task/add-task";
 import Task from "../task-list/task/Task";
-import './Home.css';
+import './favorite.css';
 
-function Home() {
+function favorite() {
   //Liste Tâche
   const [tasks, setTasks] = useState<any[]>([]);
 
   const data = tasksFirebase();
 
   useEffect(() => {
-    const today = new Date().toDateString();
-    const todayTasks = data.filter(task => task.date.toDateString() === today);
-
-    setTasks(todayTasks);
+    const favoriteTasks = data.filter(task => task.favorite);
+    setTasks(favoriteTasks);
   }, [data]);
 
 
@@ -124,7 +121,7 @@ function Home() {
 
       <div className="row-title-task-list">
         <div className="title-task-list">
-            Aujourd'hui
+            Favoris
         </div>
         <button onClick={handleOpenModal}>Ajouter une Tâche</button>
       </div>
@@ -146,4 +143,4 @@ function Home() {
     
 }
 
-export default Home;
+export default favorite;

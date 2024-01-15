@@ -140,9 +140,13 @@ const newTasks = async () => {
           </>
         )}
 
-        {filteredData.map((taskModel: TaskModel) => (
+        {filteredData.map((taskModel: TaskModel, index) => (
           <div className="separator" key={taskModel.id}>
-            <Task task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} />
+            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={function (task: TaskModel): void {
+              throw new Error('Function not implemented.');
+            } } onSelectTag={function (tag: string): void {
+              throw new Error('Function not implemented.');
+            } } />
           </div>
         ))}
       </div>
