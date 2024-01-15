@@ -1,15 +1,14 @@
 
 import { useEffect, useState } from "react";
 import { TaskModel } from "../model/task-model";
-
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from "../firebase/collections/useTask";
 import tasksFirebase from "../firebase/hooks/hooksFirebase";
 import AddTask from "../task-list/add-task/add-task";
 import Task from "../task-list/task/Task";
-import './Home.css';
+import './favorite.css';
 import ModifyTask from "../task-list/modify-task/modify-task";
 
-function Home() {
+function favorite() {
   // Tasks list
   const [tasks, setTasks] = useState<any[]>([]);
 
@@ -26,14 +25,13 @@ function Home() {
   }, [tasks]);
 
   const filterTasks = async () => {
-    const tasksForToday = tasks.filter(task => {
-      const taskDate = new Date(task.date);
-      const taskDateOnly = taskDate.toDateString();
-
-      const today = new Date().toDateString();
-      return taskDateOnly === today;
-    });
-    setFilteredData(tasksForToday);
+    const favoriteTasks = tasks.filter(task => {
+      if(task.favorite)
+      {
+        return task;
+      }
+    })
+    setFilteredData(favoriteTasks);
   }
 
   // States
@@ -73,7 +71,6 @@ function Home() {
 
       //Add log
     }
-
     
   }
 
@@ -164,6 +161,35 @@ function Home() {
     
     setIsModifyModalOpen(false);
   }
+
+  // SET Fav
+  const handleFavTask = async (taskFav: TaskModel) =>{
+    try {
+      // Change Front 
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskFav.id) {
+            return { ...task, favorite: taskFav.favorite };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+    } catch (error) {
+
+      // Remove the change
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskFav.id) {
+            return { ...task, favorite: !taskFav.favorite };
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+    }
+    
+  }
   
   /* MODALS  Visibility */
   const handleOpenModifyModal = (task: TaskModel) => {
@@ -203,7 +229,7 @@ function Home() {
 
       <div className="row-title-task-list">
         <div className="title-task-list">
-            Aujourd'hui
+            Favoris
         </div>
         <button onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
       </div>
@@ -212,9 +238,8 @@ function Home() {
         {filteredData.map((task: TaskModel) => (
           <div className="separator">
             <article key={task.id}>
-              <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {
-                
-              } } onFav={()=>{}}/>
+              <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} 
+              onSelectTag={function (tag: string): void {} } onFav={handleFavTask}/>
             </article>
           </div>
         ))}
@@ -225,4 +250,4 @@ function Home() {
     
 }
 
-export default Home;
+export default favorite;

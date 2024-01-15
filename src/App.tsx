@@ -5,6 +5,7 @@ import Taskbar from './header/Taskbar';
 import MyCalendar from './calendar/calendar';
 import TaskList from './task-list/TaskList';
 import Home from './home/Home';
+import Favorite from './favorite/favorite';
 import { CiDark, CiLight } from "react-icons/ci";
 
 function App() {
@@ -36,8 +37,8 @@ function App() {
       </div>
         {activeView === 'home' && <Home></Home>}
         {activeView === 'list' && <TaskList></TaskList>}
-        {activeView === 'check' && <p>Contenu Archivé</p>}
-        {activeView === 'calendar' && <p><MyCalendar /></p>}
+        {activeView === 'fav' && <Favorite></Favorite>}
+        {activeView === 'calendar' && <p><MyCalendar/></p>}
       </main>
     </div>
   );

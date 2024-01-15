@@ -192,14 +192,6 @@ const MyCalendar = () => {
     setIsCreateModalOpen(false);
   }
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   
 
   return (
@@ -236,9 +228,9 @@ const MyCalendar = () => {
           </>
         )}
 
-        {filteredData.map((taskModel: TaskModel) => (
+        {filteredData.map((taskModel: TaskModel, index) => (
           <div className="separator" key={taskModel.id}>
-            <Task task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={() =>{}}/>
+            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {            } } onFav={()=>{}} />
           </div>
         ))}
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaHome, FaList, FaCalendar, FaQuestion } from 'react-icons/fa';
+import { FaCalendar, FaHome, FaList, FaStar } from 'react-icons/fa';
 import './Taskbar.css';
 
 interface TaskbarProps {
@@ -12,7 +12,7 @@ const Taskbar: React.FC<TaskbarProps> = ({ switchView, isDarkMode}) => {
     <div className={`taskbar ${isDarkMode ? 'Component-dark-mode' : 'Component-light-mode'}`}>
       <div className="taskbar-icon" onClick={() => switchView('home')}><FaHome /></div>
       <div className="taskbar-icon" onClick={() => switchView('list')}><FaList /></div>
-      <div className="taskbar-icon" onClick={() => switchView('check')}><FaQuestion/></div>
+      <div className="taskbar-icon" onClick={() => switchView('fav')}><FaStar/></div>
       <div className="taskbar-icon" onClick={() => switchView('calendar')}><FaCalendar /></div>      
     </div>
   );
