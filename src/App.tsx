@@ -27,12 +27,13 @@ function App() {
 
   return (
     <div className={`App ${isDarkMode ? 'Component-dark-mode' : 'Component-light-mode'}`}>      
+      
+
+      <main>
       <Taskbar isDarkMode={isDarkMode} switchView={switchView} />
       <div className="toggleDarkMode" onClick={toggleDarkMode}>
         {isDarkMode ? <CiLight /> : <CiDark />}
       </div>
-
-      <main>
         {activeView === 'home' && <Home></Home>}
         {activeView === 'list' && <TaskList></TaskList>}
         {activeView === 'check' && <p>Contenu Archivé</p>}
