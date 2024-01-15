@@ -30,7 +30,7 @@ const ModifyTask: React.FC<ModifyTaskProps> = (props: ModifyTaskProps) => {
       title,
       content,
       date: dueDate ? new Date(dueDate) : new Date(),
-      tags : props.task.tags,
+      tags,
       favorite: props.task.favorite
     };
 
