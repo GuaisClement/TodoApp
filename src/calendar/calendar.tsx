@@ -7,6 +7,7 @@ import { TaskModel } from "../model/task-model";
 import { addTaskToFirestore, removeTaskFromFirestore, updateTaskInFirestore } from '../firebase/collections/useTask';
 //import { TaskFilterProps } from '../task-list/filter/Task-filter';
 import tasksFirebase from '../firebase/hooks/hooksFirebase';
+import ModifyTask from '../task-list/modify-task/modify-task';
 
 type ValuePiece = Date | null;
 
@@ -26,22 +27,14 @@ const MyCalendar = () => {
     newTasks();
   }, [tasks, date]);
 
+
+  /* States */
   const [filteredData, setFilteredData] = useState<TaskModel[]>(tasks);
-
-  // Modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleAddTask = async (newTask: TaskModel) => {
-    try {
-      const taskId = await addTaskToFirestore(newTask);
-      newTask.id = taskId;
-      setTasks([...tasks, newTask]);
-      setIsModalOpen(false);
-    } catch (error) {
-      // Gérez les erreurs
-    }
-  }
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
+  const [taskModified, setTaskModified] = useState<TaskModel>(tasks[0]);
   
+  // Update Filtered data
   const newTasks = async () => {
     const tasksForSelectedDate = tasks.filter(task => {
       const taskDate = new Date(task.date);
@@ -57,6 +50,20 @@ const MyCalendar = () => {
       return taskDateOnly === valueDateOnly;
     });
     setFilteredData(tasksForSelectedDate);
+  }
+
+  /* TASKS ACTIONS */
+
+  // Add Task
+  const handleAddTask = async (newTask: TaskModel) => {
+    try {
+      const taskId = await addTaskToFirestore(newTask);
+      newTask.id = taskId;
+      setTasks([...tasks, newTask]);
+      setIsCreateModalOpen(false);
+    } catch (error) {
+      // Gérez les erreurs
+    }
   }
 
   // Remove a task
@@ -113,13 +120,38 @@ const MyCalendar = () => {
     }
   };
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+  // Modify the task
+  const handleModifyTask = async (taskModified: TaskModel) => {
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+    // Save a backup
+    let oldTask: TaskModel[] = [...tasks];
+
+    try {
+
+      // Change Front
+      setTasks(prevTasks => {
+        const updatedTasks = prevTasks.map(task => {
+          if (task.id === taskModified.id) {
+            return taskModified;
+          }
+          return task;
+        });
+        return updatedTasks;
+      });
+      
+      // Update DB
+      await updateTaskInFirestore(taskModified.id, taskModified);
+
+    } catch (error) {
+
+      // use Backup
+      setTasks(oldTask);
+    }
+    
+    setIsModifyModalOpen(false);
+  }
+
+  /* CALENDAR ACTIONS */
 
   const handleDateClick = (value: Value, event: React.SyntheticEvent<any>) => {
     setDate(value);
@@ -139,6 +171,37 @@ const MyCalendar = () => {
     setFilteredData(tasksForSelectedDate);
   };
 
+
+  /*  MODALS visibility */
+
+  const handleOpenModifyModal = (task: TaskModel) => {
+    setTaskModified(task);
+    setIsModifyModalOpen(true);
+  }
+
+  const handleCloseModifyModal = () => {
+    setTaskModified(tasks[0]);
+    setIsModifyModalOpen(false);
+  }
+  
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  }
+
+  const handleCloseCreateModal = () => {
+    setIsCreateModalOpen(false);
+  }
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  
+
   return (
     <div>
       <span style={{ fontSize: 24 }}>{date && date.toLocaleString('fr', { month: 'long', year: 'numeric' })}</span>
@@ -147,7 +210,7 @@ const MyCalendar = () => {
         <div className="title-task-list">
           Liste de tâches :
         </div>
-        <button onClick={handleOpenModal}>Ajouter une Tâche</button>
+        <button onClick={handleOpenCreateModal}>Ajouter une Tâche</button>
       </div>
 
       <Calendar
@@ -158,16 +221,24 @@ const MyCalendar = () => {
         onClickDay={handleDateClick}
       />
       <div className="column-task">
-        {isModalOpen && (
+        {isCreateModalOpen && (
           <>
-            <div className="overlay" onClick={handleCloseModal}></div>
-            <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseModal} />
+            <div className="overlay" onClick={handleCloseCreateModal}></div>
+            <AddTask onAddTask={handleAddTask} onCloseModal={handleCloseCreateModal} />
+          </>
+        )}
+  
+        {isModifyModalOpen && (
+          <>
+            <div className="overlay" onClick={handleCloseModifyModal}></div>
+            
+            <ModifyTask task={taskModified} onModifyTask={handleModifyTask} onCloseModal={handleCloseModifyModal} />
           </>
         )}
 
         {filteredData.map((taskModel: TaskModel) => (
           <div className="separator" key={taskModel.id}>
-            <Task task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} />
+            <Task task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={() =>{}}/>
           </div>
         ))}
       </div>

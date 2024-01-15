@@ -163,7 +163,7 @@ function TaskList() {
 
   const handleModifyTask = async (taskModified: TaskModel) => {
 
-    let oldTask: TaskModel[] = [...tasks];
+    const oldTask: TaskModel[] = tasks;
 
     try {
 

@@ -5,7 +5,7 @@
     position: fixed;
     top: 30%;
     left: 40%;
-    width: 400px;
+    width: 500px;
     height: auto;
     background-color: #555;
     border-radius: 10px;
@@ -37,6 +37,7 @@
 
 form{
     display: inline-grid;
+    width: 100%;
 }
 
 .form-element{
@@ -86,6 +87,11 @@ input[type="date"] {
     border-radius: 4px;        /* Coins arrondis */
     outline: none;             /* Supprime la bordure d'accentuation sur la focus */
     box-shadow: none;          /* Supprime l'ombre */
-  }
+}
+
+.tag{
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
 
 
