@@ -30,6 +30,10 @@ npm run dev
    - Supprimer une tâche
    - Modifier une tâche
    - indiquer une tâche comme faite ou pas
+   - filtrer tâches :
+      - date
+      - tags
+      - faite / pas faite    
 3. Autres :
    - 4 onglets :
       - Home (Aujourd'hui)
