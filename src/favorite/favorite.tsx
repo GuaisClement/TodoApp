@@ -239,7 +239,7 @@ function favorite() {
           <div className="separator">
             <article key={task.id}>
               <Task taskId={task.id} task={task} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} 
-              onSelectTag={function (tag: string): void {} } onFav={handleFavTask}/>
+              onSelectTag={()=>{}} onFav={handleFavTask}/>
             </article>
           </div>
         ))}

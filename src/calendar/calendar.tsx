@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import './calendar.css';
 import Task from '../task-list/task/Task';
@@ -153,7 +153,7 @@ const MyCalendar = () => {
 
   /* CALENDAR ACTIONS */
 
-  const handleDateClick = (value: Value, event: React.SyntheticEvent<any>) => {
+  const handleDateClick = (value: Value) => {
     setDate(value);
     const tasksForSelectedDate = tasks.filter(task => {
       const taskDate = new Date(task.date);
@@ -228,9 +228,9 @@ const MyCalendar = () => {
           </>
         )}
 
-        {filteredData.map((taskModel: TaskModel, index) => (
+        {filteredData.map((taskModel: TaskModel) => (
           <div className="separator" key={taskModel.id}>
-            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={function (tag: string): void {            } } onFav={()=>{}} />
+            <Task taskId={ taskModel.id } task={taskModel} onRemmoveTask={handleRemoveTask} onChecked={handleCheckedTask} onModifyTask={handleOpenModifyModal} onSelectTag={()=>{}} onFav={()=>{}} />
           </div>
         ))}
       </div>
